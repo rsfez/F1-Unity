@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public float minOrthographicSize = 1f;
+    public float minOrthographicSize = 800f;
+
+    public int nbOfZoomSteps = 3;
 
     new private Camera camera;
     private float maxOrthographicSize = float.MaxValue;
@@ -17,25 +19,7 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        camera.orthographicSize -= scroll * zoomSpeed;
-        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minOrthographicSize, maxOrthographicSize);
-
-        if (scroll > 0)
-        {
-            Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -transform.position.z);
-            targetPosition = camera.ScreenToWorldPoint(mousePos);
-        }
-        else if (scroll < 0)
-        {
-            targetPosition = transform.position;
-        }
-
-        // Move the camera towards the target position
-        if (camera.orthographicSize >= maxOrthographicSize)
-            FitCameraToTrack();
-        else
-            transform.position = new Vector3(targetPosition.x, targetPosition.y, transform.position.z);
+        HandleZoom();
     }
 
     public void FitCameraToLineTrack(LineRenderer lineRenderer)
@@ -81,5 +65,35 @@ public class CameraController : MonoBehaviour
     private void FitCameraToTrack()
     {
         FitCameraToLineTrack(track);
+    }
+
+    private void HandleZoom()
+    {
+        int scroll = 0;
+        if (Input.GetMouseButtonDown(0))
+            scroll = 1;
+        if (Input.GetMouseButtonDown(1))
+            scroll = -1;
+        if (scroll == 0)
+            return;
+
+        camera.orthographicSize -= scroll * (maxOrthographicSize / nbOfZoomSteps);
+        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minOrthographicSize, maxOrthographicSize);
+
+        if (scroll > 0)
+        {
+            Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -transform.position.z);
+            targetPosition = camera.ScreenToWorldPoint(mousePos);
+        }
+        else if (scroll < 0)
+        {
+            targetPosition = transform.position;
+        }
+
+        // Move the camera towards the target position
+        if (camera.orthographicSize >= maxOrthographicSize)
+            FitCameraToTrack();
+        else
+            transform.position = new Vector3(targetPosition.x, targetPosition.y, transform.position.z);
     }
 }
