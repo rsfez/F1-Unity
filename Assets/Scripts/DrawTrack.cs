@@ -4,6 +4,8 @@ public class DrawTrack : MonoBehaviour
 {
     public LineRenderer lineRenderer;
 
+    new public Camera camera;
+
     private readonly Vector3[] points = new Vector3[]
     {
         new Vector3(1743f, -894f, 0f),
@@ -405,6 +407,7 @@ public class DrawTrack : MonoBehaviour
     {
         lineRenderer.positionCount = points.Length;
         lineRenderer.SetPositions(points);
+        camera.GetComponent<CameraController>().FitCameraToLineTrack(lineRenderer);
     }
 
 }
