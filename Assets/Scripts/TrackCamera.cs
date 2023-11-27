@@ -21,20 +21,32 @@ public class TrackCamera : MonoBehaviour
 
     void FitCameraToBounds(Bounds bounds)
     {
-        Vector3 objectSizes = bounds.max - bounds.min;
-        float objectSize = Mathf.Max(objectSizes.x, objectSizes.y);
+        Camera camera = GetComponent<Camera>();
+        Vector3 boundsSize = bounds.size;
+        float aspectRatio = camera.aspect;
 
-        float aspectRatio = GetComponent<Camera>().aspect;
-        objectSize /= aspectRatio;
+        // Determine the orthographic size
+        float orthographicSize = 0;
+        if (aspectRatio >= 1.0f) // Wide aspect ratio
+        {
+            // For wider screens, use half the bounds width, adjusted for aspect ratio
+            orthographicSize = boundsSize.x / 2f / aspectRatio;
+        }
+        else // Tall aspect ratio
+        {
+            // For taller screens, use half the bounds height
+            orthographicSize = boundsSize.y / 2f;
+        }
 
-        float cameraView =
-            Mathf.Tan((GetComponent<Camera>().fieldOfView / 2) * Mathf.Deg2Rad);
-        float cameraDistance = objectSize / cameraView;
-        cameraDistance += sizeMultiplier * objectSize;
+        // Set the orthographic size
+        camera.orthographicSize = orthographicSize;
 
-        GetComponent<Camera>().transform.position =
-            bounds.center - cameraDistance * Vector3.forward;
-        GetComponent<Camera>().transform.LookAt(bounds.center);
+        // Set the camera position
+        camera.transform.position = new Vector3(bounds.center.x, bounds.center.y, camera.transform.position.z);
+
+        // Optionally, adjust the near and far clipping planes
+        camera.nearClipPlane = -boundsSize.magnitude; // Using negative value as orthographic camera can view 'behind' its position
+        camera.farClipPlane = boundsSize.magnitude;
     }
 
 }
