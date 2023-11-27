@@ -793,18 +793,33 @@ new TelemetryEvent(new Vector3(1673, -813, 0), 104331),
 new TelemetryEvent(new Vector3(1715, -861, 0), 104411),
         }
     );
+    private TelemetryEvent currentTelemetryEvent, nextTelemetryEvent;
 
     void Start()
     {
-        transform.position = lap.telemetryEvents[lap.IncrementAndGetTelemetryEventIndex()].position;
+        currentTelemetryEvent = lap.telemetryEvents[lap.currentTelemetryEventIndex];
+        lap.SafeIncrementTelemetryEventIndex();
+        nextTelemetryEvent = lap.telemetryEvents[lap.currentTelemetryEventIndex];
+        transform.position = currentTelemetryEvent.position;
     }
 
     void Update()
     {
         long currentTime = (long)Math.Round(Time.time * 1000);
-        if (currentTime > lap.telemetryEvents[lap.GetCurrentTelemetryEventIndex()].time)
+        long timeSinceLastUpdate = currentTime - currentTelemetryEvent.time;
+        long totalMovementTime = nextTelemetryEvent.time - currentTelemetryEvent.time;
+        if (currentTime < nextTelemetryEvent.time)
         {
-            transform.position = lap.telemetryEvents[lap.IncrementAndGetTelemetryEventIndex()].position;
+            float interpolationFactor = Math.Clamp((float)timeSinceLastUpdate / (float)totalMovementTime, 0, 1);
+            transform.position =
+                Vector3.Lerp(currentTelemetryEvent.position, nextTelemetryEvent.position, interpolationFactor);
+        }
+        else
+        {
+            currentTelemetryEvent = nextTelemetryEvent;
+            lap.SafeIncrementTelemetryEventIndex();
+            nextTelemetryEvent = lap.telemetryEvents[lap.currentTelemetryEventIndex];
+            transform.position = currentTelemetryEvent.position;
         }
     }
 }
@@ -824,25 +839,18 @@ class TelemetryEvent
 class Lap
 {
     public readonly TelemetryEvent[] telemetryEvents;
-    private int currentTelemetryEventIndex = 0;
+    public int currentTelemetryEventIndex = 0;
 
     public Lap(TelemetryEvent[] telemetryEvents)
     {
         this.telemetryEvents = telemetryEvents;
     }
 
-    public int GetCurrentTelemetryEventIndex()
+    public void SafeIncrementTelemetryEventIndex()
     {
-        return currentTelemetryEventIndex;
-    }
-
-    public int IncrementAndGetTelemetryEventIndex()
-    {
-        ++currentTelemetryEventIndex;
-        if (currentTelemetryEventIndex >= telemetryEvents.Length)
+        if (++currentTelemetryEventIndex >= telemetryEvents.Length)
         {
             currentTelemetryEventIndex = 0;
         }
-        return currentTelemetryEventIndex;
     }
 }
