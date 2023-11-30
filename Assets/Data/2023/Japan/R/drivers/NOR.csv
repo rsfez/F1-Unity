@@ -1,0 +1,22 @@
+,4
+DriverNumber,4
+BroadcastName,L NORRIS
+Abbreviation,NOR
+DriverId,norris
+TeamName,McLaren
+TeamColor,F58020
+TeamId,mclaren
+FirstName,Lando
+LastName,Norris
+FullName,Lando Norris
+HeadshotUrl,https://www.formula1.com/content/dam/fom-website/drivers/L/LANNOR01_Lando_Norris/lannor01.png.transform/1col/image.png
+CountryCode,
+Position,2.0
+ClassifiedPosition,2
+GridPosition,3.0
+Q1,
+Q2,
+Q3,
+Time,0 days 00:00:19.387000
+Status,Finished
+Points,18.0
