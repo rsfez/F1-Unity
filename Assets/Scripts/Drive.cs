@@ -30,10 +30,13 @@ public class Drive : MonoBehaviour
         }
         else
         {
-            currentTelemetryEvent = nextTelemetryEvent;
-            driver.session.SafeIncrementTelemetryEventIndex();
-            nextTelemetryEvent = driver.session.telemetryEvents[driver.session.currentTelemetryEventIndex];
-            transform.position = currentTelemetryEvent.position;
+            while (currentTime >= nextTelemetryEvent.time)
+            {
+                currentTelemetryEvent = nextTelemetryEvent;
+                driver.session.SafeIncrementTelemetryEventIndex();
+                nextTelemetryEvent = driver.session.telemetryEvents[driver.session.currentTelemetryEventIndex];
+            }
+
         }
     }
 }
