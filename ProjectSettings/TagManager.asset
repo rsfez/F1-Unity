@@ -4,7 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Number
+  - Timer
   layers:
   - Default
   - TransparentFX

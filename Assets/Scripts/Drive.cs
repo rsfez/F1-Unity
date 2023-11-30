@@ -4,12 +4,13 @@ using UnityEngine;
 public class Drive : MonoBehaviour
 {
     private Driver driver;
-
+    private Timer timer;
     private TelemetryEvent currentTelemetryEvent, nextTelemetryEvent;
 
     void Start()
     {
         driver = GetComponent<DriverController>().driver;
+        timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
         currentTelemetryEvent = driver.session.telemetryEvents[driver.session.currentTelemetryEventIndex];
         driver.session.SafeIncrementTelemetryEventIndex();
         nextTelemetryEvent = driver.session.telemetryEvents[driver.session.currentTelemetryEventIndex];
@@ -18,8 +19,8 @@ public class Drive : MonoBehaviour
 
     void Update()
     {
-        if (driver == null) return;
-        long currentTime = (long)Math.Round(Time.time * 1000);
+        if (driver == null || timer == null || !timer.IsRunning()) return;
+        long currentTime = timer.GetTime();
         long timeSinceLastUpdate = currentTime - currentTelemetryEvent.time;
         long totalMovementTime = nextTelemetryEvent.time - currentTelemetryEvent.time;
         if (currentTime < nextTelemetryEvent.time)
