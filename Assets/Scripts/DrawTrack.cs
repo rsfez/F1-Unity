@@ -17,7 +17,7 @@ public class DrawTrack : MonoBehaviour
 
     private Vector3[] LoadTrack()
     {
-        string[][] csv = CSVUtils.Parse("Assets/Data/2023/Japan/R/track.csv");
+        string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/track");
         Vector3[] points = new Vector3[csv.Length];
 
         for (int y = 0; y < csv.Length; y++)

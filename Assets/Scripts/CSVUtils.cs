@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.IO;
 using System.Linq;
 
 class CSVUtils
@@ -16,7 +15,7 @@ class CSVUtils
     {
         try
         {
-            string fileData = File.ReadAllText(path);
+            string fileData = Resources.Load<TextAsset>(path).text;
             return fileData.Split('\n');
         }
         catch (System.Exception e)

@@ -1,32 +1,48 @@
-using System;
-using TMPro;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class Driver : MonoBehaviour
+public class Driver
 {
-    private String trigram = "XXX";
-    private String number = "00";
-    private Color color;
+    public readonly string number, abbreviation, id;
+    public short position;
+    public Team team;
+    public readonly TelemetrySession session;
 
-    void Start()
+    public Driver(string number, string abbreviation, string id, short position)
     {
-        GetComponent<SpriteRenderer>().color = color;
-        GetComponentInChildren<TextMeshPro>().text = number;
-    }
-
-    void SetParams(String trigram, String number, Color color)
-    {
-        this.trigram = trigram;
         this.number = number;
-        this.color = color;
+        this.abbreviation = abbreviation;
+        this.id = id;
+        this.position = position;
+
+        TelemetryEvent[] telemetryEvents = LoadTelemetryEventsFromCSV();
+        session = new TelemetrySession(telemetryEvents);
     }
 
-    public static Driver Create(String trigram, String number, Color color)
+    public static Driver FromCSV(string abbreviation)
     {
-        GameObject driverGameObject = Instantiate(Resources.Load("Prefabs/Driver") as GameObject);
-        Driver driver = driverGameObject.GetComponent<Driver>();
-        driver.SetParams(trigram, number, color);
+        string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
+        string number = csv[0][0];
+        string id = csv[3][0];
+        short position = (short)float.Parse(csv[12][0]);
+        Driver driver = new Driver(
+            number,
+            abbreviation,
+            id,
+            position
+        );
+        driver.team = Team.FromCSV(csv);
         return driver;
+    }
+
+    private TelemetryEvent[] LoadTelemetryEventsFromCSV()
+    {
+        string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/telemetry/" + abbreviation);
+        ArrayList telemetryEvents = new ArrayList();
+        foreach (string[] line in csv)
+        {
+            telemetryEvents.Add(TelemetryEvent.GetFromCSVLine(line));
+        }
+        return (TelemetryEvent[])telemetryEvents.ToArray(typeof(TelemetryEvent));
     }
 }

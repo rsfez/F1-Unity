@@ -10,7 +10,6 @@ public class CameraController : MonoBehaviour
     private float maxOrthographicSize = float.MaxValue;
     private Vector3 targetPosition;
     private LineRenderer track;
-    private float zoomSpeed = 1000f;
 
     void Start()
     {
