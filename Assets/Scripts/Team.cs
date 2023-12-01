@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class Team
 {
-    public string name, id;
-    public Color color;
+    public readonly string name, id;
+    public readonly Color color;
 
-    public HashSet<Driver> drivers = new HashSet<Driver>();
+    public readonly HashSet<Driver> drivers = new HashSet<Driver>();
 
     public Team(string name, string id, Color color)
     {

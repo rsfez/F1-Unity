@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
@@ -69,7 +70,7 @@ public class CameraController : MonoBehaviour
     private void HandleZoom()
     {
         int scroll = 0;
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             scroll = 1;
         if (Input.GetMouseButtonDown(1))
             scroll = -1;

@@ -6,11 +6,6 @@ public class Timer : MonoBehaviour
     private float timer = 0;
     private bool timerRunning = false;
 
-    void Start()
-    {
-        timerRunning = true;
-    }
-
     void Update()
     {
         if (timerRunning)
@@ -24,7 +19,7 @@ public class Timer : MonoBehaviour
         timerRunning = true;
     }
 
-    public void StopTimer()
+    public void PauseTimer()
     {
         timerRunning = false;
     }
