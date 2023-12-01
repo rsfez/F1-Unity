@@ -11,10 +11,10 @@ public class CameraController : MonoBehaviour
     private float maxOrthographicSize = float.MaxValue;
     private Vector3 targetPosition;
     private LineRenderer track;
-
     void Start()
     {
         camera = GetComponent<Camera>();
+        LeaveRoomToUI();
     }
 
     void Update()
@@ -95,5 +95,12 @@ public class CameraController : MonoBehaviour
             FitCameraToTrack();
         else
             transform.position = new Vector3(targetPosition.x, targetPosition.y, transform.position.z);
+    }
+
+    private void LeaveRoomToUI()
+    {
+        Rect rect = camera.rect;
+        rect.x = GameObject.FindWithTag("Panel").GetComponent<RectTransform>().sizeDelta.x / Screen.width;
+        camera.rect = rect;
     }
 }
