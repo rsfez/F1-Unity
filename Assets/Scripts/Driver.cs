@@ -35,6 +35,22 @@ public class Driver
         return driver;
     }
 
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+
+        var other = (Driver)obj;
+        return id == other.id;
+    }
+
+    public override int GetHashCode()
+    {
+        return id.GetHashCode();
+    }
+
     private TelemetryEvent[] LoadTelemetryEventsFromCSV()
     {
         string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/telemetry/" + abbreviation);

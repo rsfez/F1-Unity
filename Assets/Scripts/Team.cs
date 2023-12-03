@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using UnityEngine;
-
 public class Team
 {
     public readonly string name, id;
@@ -21,5 +22,21 @@ public class Team
         string id = csv[6][0];
         Color color = ColorUtils.HexToColor(csv[5][0]);
         return new Team(name, id, color);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+
+        var other = (Team)obj;
+        return id == other.id;
+    }
+
+    public override int GetHashCode()
+    {
+        return id.GetHashCode();
     }
 }
