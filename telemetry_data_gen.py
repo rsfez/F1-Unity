@@ -18,17 +18,17 @@ if __name__ == '__main__':
     track = pos.loc[:, ('X', 'Y')].to_numpy()
 
     base_directory = os.path.join('Assets', 'Resources', 'Data', str(year), gp, ses)
-    drivers_directory = os.path.join(ses_directory, 'drivers')
-    telemetry_directory = os.path.join(ses_directory, 'telemetry')
-    if not os.path.exists(ses_directory):
-        os.makedirs(ses_directory)
+    drivers_directory = os.path.join(base_directory, 'drivers')
+    telemetry_directory = os.path.join(base_directory, 'telemetry')
+    if not os.path.exists(base_directory):
+        os.makedirs(base_directory)
     if not os.path.exists(drivers_directory):
         os.makedirs(drivers_directory)
     if not os.path.exists(telemetry_directory):
         os.makedirs(telemetry_directory)
 
-    pos.to_csv(os.path.join(ses_directory, 'track.csv'), columns=['X', 'Y'])
-    session.laps.to_csv(os.path.join(ses_directory, 'session.csv'))
+    pos.to_csv(os.path.join(base_directory, 'track.csv'), columns=['X', 'Y'])
+    session.laps.to_csv(os.path.join(base_directory, 'session.csv'))
 
     for driver_id in session.drivers:
         driver = session.get_driver(driver_id)
@@ -37,4 +37,3 @@ if __name__ == '__main__':
         telemetry = session.laps.pick_driver(driver_id).get_telemetry()
         telemetry['Time'] = telemetry['Time'].apply(lambda time: (int(round(time.total_seconds() * 1000))))
         telemetry.to_csv(os.path.join(telemetry_directory, f'{abbreviation}.csv'), columns=['Time', 'RPM', 'Speed', 'nGear', 'Throttle', 'Brake', 'DRS', 'X', 'Y', 'DriverAhead'])
-        telemetry.to_csv(os.path.join(telemetry_directory, f'{abbreviation}.csv'))
