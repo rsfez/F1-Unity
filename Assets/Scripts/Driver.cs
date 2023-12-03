@@ -1,18 +1,17 @@
+using System;
 using System.Collections;
-using UnityEngine;
 
-public class Driver
+public class Driver : IComparable<Driver>
 {
-    public readonly string number, abbreviation, id;
+    public readonly string number, abbreviation;
     public short position;
     public Team team;
     public readonly TelemetrySession session;
 
-    public Driver(string number, string abbreviation, string id, short position)
+    public Driver(string number, string abbreviation, short position)
     {
         this.number = number;
         this.abbreviation = abbreviation;
-        this.id = id;
         this.position = position;
 
         TelemetryEvent[] telemetryEvents = LoadTelemetryEventsFromCSV();
@@ -23,12 +22,10 @@ public class Driver
     {
         string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
         string number = csv[0][0];
-        string id = csv[3][0];
-        short position = (short)float.Parse(csv[12][0]);
+        short position = (short)float.Parse(csv[14][0]);
         Driver driver = new Driver(
             number,
             abbreviation,
-            id,
             position
         );
         driver.team = Team.FromCSV(csv);
@@ -43,12 +40,18 @@ public class Driver
         }
 
         var other = (Driver)obj;
-        return id == other.id;
+        return number == other.number;
     }
 
     public override int GetHashCode()
     {
-        return id.GetHashCode();
+        return number.GetHashCode();
+    }
+
+    public int CompareTo(Driver other)
+    {
+        if (other == null) return 1;
+        return position.CompareTo(other.position);
     }
 
     private TelemetryEvent[] LoadTelemetryEventsFromCSV()

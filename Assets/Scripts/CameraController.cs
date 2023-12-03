@@ -100,7 +100,7 @@ public class CameraController : MonoBehaviour
     private void LeaveRoomToUI()
     {
         Rect rect = camera.rect;
-        rect.x = GameObject.FindWithTag("Panel").GetComponent<RectTransform>().sizeDelta.x / Screen.width;
+        rect.x = GameObject.FindWithTag("LeftPanel").GetComponent<RectTransform>().sizeDelta.x / Screen.width;
         camera.rect = rect;
     }
 }

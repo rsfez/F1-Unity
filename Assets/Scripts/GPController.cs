@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class GPController : MonoBehaviour
 {
     private HashSet<Team> teams = new HashSet<Team>();
-    public SortedSet<Driver> ranking = new SortedSet<Driver>();
+    public SortedSet<Driver> standings = new SortedSet<Driver>();
 
     void Start()
     {
@@ -18,17 +20,48 @@ public class GPController : MonoBehaviour
         {
             DriverController driverController = DriverController.Create(textAsset.name);
             Driver driver = driverController.driver;
-            if (teams.Contains(driver.team))
-            {
-                teams.TryGetValue(driver.team, out Team team);
-                driver.team = team;
-            }
-            else
-            {
-                teams.Add(driver.team);
-            }
-            ranking.Add(driver);
+            AssignDriverToTeam(driver);
+            standings.Add(driver);
         }
+        HandleDriversStartingFromPits();
+        PopulateStandings();
         yield return null;
+    }
+
+    private void AssignDriverToTeam(Driver driver)
+    {
+        if (teams.Contains(driver.team))
+        {
+            teams.TryGetValue(driver.team, out Team team);
+            driver.team = team;
+        }
+        else
+        {
+            teams.Add(driver.team);
+        }
+    }
+
+    private void HandleDriversStartingFromPits()
+    {
+        foreach (Driver rankedDriver in new List<Driver>(standings))
+        {
+            if (rankedDriver.position == 0)
+            {
+                standings.Remove(rankedDriver);
+                rankedDriver.position = (short)(standings.Last<Driver>().position + 1);
+                standings.Add(rankedDriver);
+            }
+        }
+    }
+
+    private void PopulateStandings()
+    {
+        GameObject standingsUI = GameObject.FindWithTag("Standings");
+        foreach (Driver driver in standings)
+        {
+            GameObject driverStanding = Instantiate(Resources.Load("Prefabs/DriverStanding") as GameObject);
+            driverStanding.GetComponent<TextMeshProUGUI>().text = driver.abbreviation;
+            driverStanding.transform.SetParent(standingsUI.transform);
+        }
     }
 }
