@@ -11,6 +11,11 @@ public class TelemetryEvent
         this.time = time;
     }
 
+    public TelemetryEvent CopyWithTime(long currentTime)
+    {
+        return new TelemetryEvent(this.position, currentTime);
+    }
+
     public static TelemetryEvent GetFromCSVLine(string[] line)
     {
         return new TelemetryEvent(

@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Drive : MonoBehaviour
@@ -25,19 +26,18 @@ public class Drive : MonoBehaviour
         long totalMovementTime = nextTelemetryEvent.time - currentTelemetryEvent.time;
         if (currentTime < nextTelemetryEvent.time)
         {
-            float interpolationFactor = Math.Clamp((float)timeSinceLastUpdate / (float)totalMovementTime, 0, 1);
+            float interpolationFactor = Math.Clamp(timeSinceLastUpdate / (float)totalMovementTime, 0, 1);
             transform.position =
-                Vector3.Lerp(currentTelemetryEvent.position, nextTelemetryEvent.position, interpolationFactor);
+                Vector3.LerpUnclamped(currentTelemetryEvent.position, nextTelemetryEvent.position, interpolationFactor);
         }
         else
         {
             while (currentTime >= nextTelemetryEvent.time)
             {
-                currentTelemetryEvent = nextTelemetryEvent;
+                currentTelemetryEvent = nextTelemetryEvent.CopyWithTime(currentTime);
                 driver.session.SafeIncrementTelemetryEventIndex();
                 nextTelemetryEvent = driver.session.telemetryEvents[driver.session.currentTelemetryEventIndex];
             }
-
         }
     }
 }
