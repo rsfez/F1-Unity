@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Container" style="padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; background-color: rgb(120, 120, 120); flex-shrink: 0;">
+        <ui:Label tabindex="-1" text="0:00:000" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Timer" focusable="false" style="-unity-text-align: upper-center;" />
+        <ui:Button text="Start" parse-escape-sequences="true" display-tooltip-when-elided="true" name="StartPause" style="flex-shrink: 0; flex-grow: 0;" />
+        <ui:VisualElement name="SpeedButtonsContainer" style="flex-grow: 0; flex-direction: row; justify-content: center;">
+            <ui:Button text="x1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="x1" />
+            <ui:Button text="x2" parse-escape-sequences="true" display-tooltip-when-elided="true" name="x2" />
+            <ui:Button text="x4" parse-escape-sequences="true" display-tooltip-when-elided="true" name="x4" />
+            <ui:Button text="x8" parse-escape-sequences="true" display-tooltip-when-elided="true" name="x8" />
+        </ui:VisualElement>
+        <ui:ListView focusable="false" name="Standings" style="flex-grow: 0; flex-shrink: 0;" />
+    </ui:VisualElement>
+</ui:UXML>

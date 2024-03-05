@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 
 public class GPController : MonoBehaviour
@@ -56,12 +55,7 @@ public class GPController : MonoBehaviour
 
     private void PopulateStandings()
     {
-        GameObject standingsUI = GameObject.FindWithTag("Standings");
-        foreach (Driver driver in standings)
-        {
-            GameObject driverStanding = Instantiate(Resources.Load("Prefabs/DriverStanding") as GameObject);
-            driverStanding.GetComponent<TextMeshProUGUI>().text = driver.abbreviation;
-            driverStanding.transform.SetParent(standingsUI.transform);
-        }
+        LeftPanelController leftPanelController = GameObject.FindWithTag("LeftPanel").GetComponent<LeftPanelController>();
+        leftPanelController.UpdateStandings(standings);
     }
 }

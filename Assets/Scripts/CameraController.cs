@@ -38,7 +38,7 @@ public class CameraController : MonoBehaviour
         float aspectRatio = camera.aspect;
 
         // Determine the orthographic size
-        float orthographicSize = 0;
+        float orthographicSize;
         if (aspectRatio >= 1.0f) // Wide aspect ratio
         {
             // For wider screens, use half the bounds width, adjusted for aspect ratio
@@ -99,8 +99,9 @@ public class CameraController : MonoBehaviour
 
     private void LeaveRoomToUI()
     {
+        float uiWidth = GameObject.FindWithTag("LeftPanel").GetComponent<LeftPanelController>().width;
         Rect rect = camera.rect;
-        rect.x = GameObject.FindWithTag("LeftPanel").GetComponent<RectTransform>().sizeDelta.x / Screen.width;
+        rect.x = uiWidth / Screen.width;
         camera.rect = rect;
     }
 }
