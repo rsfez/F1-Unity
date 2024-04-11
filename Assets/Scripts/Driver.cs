@@ -6,7 +6,7 @@ public class Driver : IComparable<Driver>
     public readonly string number, abbreviation;
     public short position;
     public Team team;
-    public readonly TelemetrySession session;
+    public readonly TelemetryEvent currentTelemetryEvent;
 
     public Driver(string number, string abbreviation, short position)
     {
@@ -14,8 +14,7 @@ public class Driver : IComparable<Driver>
         this.abbreviation = abbreviation;
         this.position = position;
 
-        TelemetryEvent[] telemetryEvents = LoadTelemetryEventsFromCSV();
-        session = new TelemetrySession(telemetryEvents);
+        currentTelemetryEvent = LoadTelemetryEventsFromCSV();
     }
 
     public static Driver FromCSV(string abbreviation)
@@ -54,14 +53,21 @@ public class Driver : IComparable<Driver>
         return position.CompareTo(other.position);
     }
 
-    private TelemetryEvent[] LoadTelemetryEventsFromCSV()
+    private TelemetryEvent LoadTelemetryEventsFromCSV()
     {
         string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/telemetry/" + abbreviation);
-        ArrayList telemetryEvents = new ArrayList();
+        TelemetryEvent previousTelemetryEvent = null;
+        TelemetryEvent firstTelemetryEvent = null;
         foreach (string[] line in csv)
         {
-            telemetryEvents.Add(TelemetryEvent.GetFromCSVLine(line));
+            TelemetryEvent currentTelemetryEvent = TelemetryEvent.GetFromCSVLine(line);
+            currentTelemetryEvent.previous = previousTelemetryEvent;
+            if (previousTelemetryEvent != null) {
+                previousTelemetryEvent.next = currentTelemetryEvent;
+            }
+            previousTelemetryEvent = currentTelemetryEvent;
+            firstTelemetryEvent ??= currentTelemetryEvent;
         }
-        return (TelemetryEvent[])telemetryEvents.ToArray(typeof(TelemetryEvent));
+        return firstTelemetryEvent;
     }
 }

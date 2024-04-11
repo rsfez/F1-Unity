@@ -4,6 +4,7 @@ public class TelemetryEvent
 {
     public readonly Vector3 position;
     public readonly long time;
+    public TelemetryEvent previous, next;
 
     public TelemetryEvent(Vector3 position, long time)
     {
@@ -11,9 +12,17 @@ public class TelemetryEvent
         this.time = time;
     }
 
+    private TelemetryEvent(Vector3 position, long time, TelemetryEvent previous, TelemetryEvent next)
+    {
+        this.position = position;
+        this.time = time;
+        this.previous = previous;
+        this.next = next;
+    }
+
     public TelemetryEvent CopyWithTime(long currentTime)
     {
-        return new TelemetryEvent(this.position, currentTime);
+        return new TelemetryEvent(position, currentTime, previous, next);
     }
 
     public static TelemetryEvent GetFromCSVLine(string[] line)

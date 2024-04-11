@@ -1,20 +1,17 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Drive : MonoBehaviour
 {
     private Driver driver;
     private Timer timer;
-    private TelemetryEvent currentTelemetryEvent, nextTelemetryEvent;
+    private TelemetryEvent currentTelemetryEvent;
 
     void Start()
     {
         driver = GetComponent<DriverController>().driver;
         timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
-        currentTelemetryEvent = driver.session.telemetryEvents[driver.session.currentTelemetryEventIndex];
-        driver.session.SafeIncrementTelemetryEventIndex();
-        nextTelemetryEvent = driver.session.telemetryEvents[driver.session.currentTelemetryEventIndex];
+        currentTelemetryEvent = driver.currentTelemetryEvent;
         transform.position = currentTelemetryEvent.position;
     }
 
@@ -23,20 +20,18 @@ public class Drive : MonoBehaviour
         if (driver == null || timer == null || !timer.IsRunning()) return;
         long currentTime = timer.GetTime();
         long timeSinceLastUpdate = currentTime - currentTelemetryEvent.time;
-        long totalMovementTime = nextTelemetryEvent.time - currentTelemetryEvent.time;
-        if (currentTime < nextTelemetryEvent.time)
+        long totalMovementTime = currentTelemetryEvent.next.time - currentTelemetryEvent.time;
+        if (currentTime < currentTelemetryEvent.next.time)
         {
             float interpolationFactor = Math.Clamp(timeSinceLastUpdate / (float)totalMovementTime, 0, 1);
             transform.position =
-                Vector3.LerpUnclamped(currentTelemetryEvent.position, nextTelemetryEvent.position, interpolationFactor);
+                Vector3.LerpUnclamped(currentTelemetryEvent.position, currentTelemetryEvent.next.position, interpolationFactor);
         }
         else
         {
-            while (currentTime >= nextTelemetryEvent.time)
+            while (currentTime >= currentTelemetryEvent.next.time)
             {
-                currentTelemetryEvent = nextTelemetryEvent.CopyWithTime(currentTime);
-                driver.session.SafeIncrementTelemetryEventIndex();
-                nextTelemetryEvent = driver.session.telemetryEvents[driver.session.currentTelemetryEventIndex];
+                currentTelemetryEvent = currentTelemetryEvent.next.CopyWithTime(currentTime);
             }
         }
     }
