@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 
 public class Driver : IComparable<Driver>
 {
     public readonly string number, abbreviation;
     public short position;
     public Team team;
-    public readonly TelemetryEvent currentTelemetryEvent;
+    public readonly TelemetryEvent initialTelemetryEvent;
 
     public Driver(string number, string abbreviation, short position)
     {
@@ -14,7 +13,7 @@ public class Driver : IComparable<Driver>
         this.abbreviation = abbreviation;
         this.position = position;
 
-        currentTelemetryEvent = LoadTelemetryEventsFromCSV();
+        initialTelemetryEvent = LoadTelemetryEventsFromCSV();
     }
 
     public static Driver FromCSV(string abbreviation)

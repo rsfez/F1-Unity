@@ -7,6 +7,7 @@ TagManager:
   - Timer
   - LeftPanel
   - Standings
+  - Track
   layers:
   - Default
   - TransparentFX
