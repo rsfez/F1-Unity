@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
+
 
 public class Driver : IComparable<Driver>
 {
     public readonly string number, abbreviation;
     public short position;
     public Team team;
-    public readonly TelemetryEvent initialTelemetryEvent;
+    public TelemetryEvent lastVisitedTelemetryEvent;
 
     public Driver(string number, string abbreviation, short position)
     {
@@ -13,7 +15,7 @@ public class Driver : IComparable<Driver>
         this.abbreviation = abbreviation;
         this.position = position;
 
-        initialTelemetryEvent = LoadTelemetryEventsFromCSV();
+        lastVisitedTelemetryEvent = TelemetryEvent.LoadTelemetryEventsFromCSV(abbreviation);
     }
 
     public static Driver FromCSV(string abbreviation)
@@ -46,27 +48,25 @@ public class Driver : IComparable<Driver>
         return number.GetHashCode();
     }
 
+    public override string ToString()
+    {
+        return abbreviation + " in position: " + position + ". Behind: " + lastVisitedTelemetryEvent.driverAhead;
+    }
+
     public int CompareTo(Driver other)
     {
         if (other == null) return 1;
         return position.CompareTo(other.position);
     }
 
-    private TelemetryEvent LoadTelemetryEventsFromCSV()
+    public short GetDriverAheadNumber()
     {
-        string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/telemetry/" + abbreviation);
-        TelemetryEvent previousTelemetryEvent = null;
-        TelemetryEvent firstTelemetryEvent = null;
-        foreach (string[] line in csv)
-        {
-            TelemetryEvent currentTelemetryEvent = TelemetryEvent.GetFromCSVLine(line);
-            currentTelemetryEvent.previous = previousTelemetryEvent;
-            if (previousTelemetryEvent != null) {
-                previousTelemetryEvent.next = currentTelemetryEvent;
-            }
-            previousTelemetryEvent = currentTelemetryEvent;
-            firstTelemetryEvent ??= currentTelemetryEvent;
-        }
-        return firstTelemetryEvent;
+        return lastVisitedTelemetryEvent.driverAhead;
+    }
+
+    public Driver GetDriverAhead(Dictionary<short, Driver> drivers)
+    {
+        if (lastVisitedTelemetryEvent.driverAhead == 0) return null;
+        return drivers[lastVisitedTelemetryEvent.driverAhead];
     }
 }

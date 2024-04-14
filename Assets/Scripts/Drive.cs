@@ -5,7 +5,7 @@ using UnityEngine.Splines;
 
 public class Drive : MonoBehaviour
 {
-    private int segmentSize = 20;
+    private readonly int segmentSize = 50;
     private Spline spline;
     private Driver driver;
     private Timer timer;
@@ -17,7 +17,7 @@ public class Drive : MonoBehaviour
         timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
         SplineContainer splineContainer = GameObject.FindWithTag("Track").AddComponent<SplineContainer>();
         spline = splineContainer.Spline;
-        InitSpline(driver.initialTelemetryEvent);
+        InitSpline(driver.lastVisitedTelemetryEvent);
         transform.position = spline.Knots.First().Position;
     }
 
@@ -27,25 +27,41 @@ public class Drive : MonoBehaviour
         float normalizedTime = GetNormalizedTime();
         long currentTime = timer.GetTime();
 
-        if (normalizedTime > 0.99)
+        // "Fast-forward" to lastly covered telemetry evevent 
+        while (currentTime > driver.lastVisitedTelemetryEvent.time)
         {
-            while (currentTime > segmentStart.time)
-            {
-                segmentStart = segmentStart.next;
-                segmentEnd = segmentEnd.next;
-                spline.RemoveAt(0);
-                spline.Add(new BezierKnot(segmentEnd.position));
-            }
-            TelemetryEvent current = new TelemetryEvent(transform.position, currentTime);
-            current.next = segmentStart;
-            segmentStart.previous = current;
-            segmentStart = current;
-            spline.Insert(0, new BezierKnot(current.position));
-            spline.RemoveAt(spline.Knots.Count() - 1);
-        } else {
+            driver.lastVisitedTelemetryEvent = driver.lastVisitedTelemetryEvent.next;
+        }
+
+        // Reset spline when it gets close to the end to continue with smooth interpolation
+        if (normalizedTime > 0.90)
+        {
+            UpdateSplineSegment(currentTime);
+        }
+        else
+        {
             float3 position = spline.EvaluatePosition(normalizedTime);
             transform.position = position;
         }
+    }
+
+    private void UpdateSplineSegment(long currentTime)
+    {
+        while (currentTime > segmentStart.time)
+        {
+            segmentStart = segmentStart.next;
+            segmentEnd = segmentEnd.next;
+            spline.RemoveAt(0);
+            spline.Add(new BezierKnot(segmentEnd.position));
+        }
+        // Using the current position to start the new segment as not to teleport to the next one
+        TelemetryEvent current = new TelemetryEvent(transform.position, currentTime, driver.lastVisitedTelemetryEvent.driverAhead);
+
+        current.next = segmentStart;
+        segmentStart.previous = current;
+        segmentStart = current;
+        spline.Insert(0, new BezierKnot(current.position));
+        spline.RemoveAt(spline.Knots.Count() - 1);
     }
 
     private void InitSpline(TelemetryEvent segmentStart)
@@ -62,6 +78,6 @@ public class Drive : MonoBehaviour
 
     private float GetNormalizedTime()
     {
-        return ((float) timer.GetTime() - (float) segmentStart.time) / ((float) segmentEnd.time - (float) segmentStart.time);
+        return (timer.GetTime() - (float)segmentStart.time) / (segmentEnd.time - (float)segmentStart.time);
     }
 }
