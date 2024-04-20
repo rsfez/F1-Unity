@@ -55,10 +55,10 @@ public class Drive : MonoBehaviour
             spline.Add(new BezierKnot(segmentEnd.position));
         }
         // Using the current position to start the new segment as not to teleport to the next one
-        TelemetryEvent current = new TelemetryEvent(transform.position, currentTime, driver.lastVisitedTelemetryEvent.driverAhead);
-
-        current.next = segmentStart;
-        segmentStart.previous = current;
+        TelemetryEvent current = new(transform.position, currentTime, driver.lastVisitedTelemetryEvent.driverAhead)
+        {
+            next = segmentStart
+        };
         segmentStart = current;
         spline.Insert(0, new BezierKnot(current.position));
         spline.RemoveAt(spline.Knots.Count() - 1);
