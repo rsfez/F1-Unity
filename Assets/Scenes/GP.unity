@@ -153,8 +153,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 703019860}
+  m_Children: []
   m_Father: {fileID: 316999996}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &82155742
@@ -170,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 82155743}
+  camera: {fileID: 703019859}
 --- !u!120 &82155743
 LineRenderer:
   serializedVersion: 2
@@ -285,7 +285,7 @@ GameObject:
   - component: {fileID: 177455674}
   - component: {fileID: 177455675}
   m_Layer: 0
-  m_Name: MutiButtons
+  m_Name: MultiButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -472,6 +472,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 703019860}
   - {fileID: 843723527}
   - {fileID: 82155741}
   m_Father: {fileID: 0}
@@ -626,7 +627,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 82155741}
+  m_Father: {fileID: 316999996}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &703019861
 AudioListener:
@@ -881,6 +882,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 843723529}
+  camera: {fileID: 0}
 --- !u!120 &843723529
 LineRenderer:
   serializedVersion: 2
