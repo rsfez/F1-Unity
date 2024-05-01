@@ -11,9 +11,14 @@ public class CameraController : MonoBehaviour
     private float maxOrthographicSize = float.MaxValue;
     private Vector3 targetPosition;
     private LineRenderer track;
-    void Start()
+
+    void Awake()
     {
         camera = GetComponent<Camera>();
+    }
+
+    void Start()
+    {
         LeaveRoomToUI();
     }
 
@@ -24,11 +29,12 @@ public class CameraController : MonoBehaviour
 
     public void FitCameraToLineTrack(LineRenderer lineRenderer)
     {
+
         track = lineRenderer;
         if (track == null || track.positionCount <= 0)
             return;
 
-        Bounds bounds = new Bounds(track.GetPosition(0), Vector3.zero);
+        Bounds bounds = new(track.GetPosition(0), Vector3.zero);
         for (int i = 0; i < track.positionCount; i++)
         {
             bounds.Encapsulate(track.GetPosition(i));
@@ -38,7 +44,7 @@ public class CameraController : MonoBehaviour
         float aspectRatio = camera.aspect;
 
         // Determine the orthographic size
-        float orthographicSize = 0;
+        float orthographicSize;
         if (aspectRatio >= 1.0f) // Wide aspect ratio
         {
             // For wider screens, use half the bounds width, adjusted for aspect ratio

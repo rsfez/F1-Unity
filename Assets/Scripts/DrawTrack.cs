@@ -3,8 +3,7 @@ using UnityEngine;
 public class DrawTrack : MonoBehaviour
 {
     public LineRenderer lineRenderer;
-
-    new public Camera camera;
+    new public GameObject camera;
 
     void Start()
     {
@@ -12,7 +11,8 @@ public class DrawTrack : MonoBehaviour
 
         lineRenderer.positionCount = points.Length;
         lineRenderer.SetPositions(points);
-        camera.GetComponent<CameraController>().FitCameraToLineTrack(lineRenderer);
+
+        if (camera != null) camera.GetComponent<CameraController>().FitCameraToLineTrack(lineRenderer);
     }
 
     private Vector3[] LoadTrack()

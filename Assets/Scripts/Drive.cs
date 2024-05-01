@@ -15,7 +15,7 @@ public class Drive : MonoBehaviour
     {
         driver = GetComponent<DriverController>().driver;
         timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
-        SplineContainer splineContainer = GameObject.FindWithTag("Track").AddComponent<SplineContainer>();
+        SplineContainer splineContainer = GameObject.FindWithTag("GP").AddComponent<SplineContainer>();
         spline = splineContainer.Spline;
         InitSpline(driver.lastVisitedTelemetryEvent);
         transform.position = spline.Knots.First().Position;
