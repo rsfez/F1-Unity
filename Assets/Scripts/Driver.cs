@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 
 public class Driver : IComparable<Driver>
@@ -8,6 +9,7 @@ public class Driver : IComparable<Driver>
     public short position;
     public Team team;
     public TelemetryEvent lastVisitedTelemetryEvent;
+    public GameObject gameObject;
 
     public Driver(string number, string abbreviation, short position)
     {
@@ -23,12 +25,14 @@ public class Driver : IComparable<Driver>
         string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
         string number = csv[0][0];
         short position = (short)float.Parse(csv[14][0]);
-        Driver driver = new Driver(
+        Driver driver = new(
             number,
             abbreviation,
             position
-        );
-        driver.team = Team.FromCSV(csv);
+        )
+        {
+            team = Team.FromCSV(csv)
+        };
         return driver;
     }
 

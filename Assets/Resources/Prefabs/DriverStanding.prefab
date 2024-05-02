@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6033701687842508824}
   - component: {fileID: 8013867753284997171}
   - component: {fileID: 1481841297990306709}
+  - component: {fileID: -3449360103865178300}
   m_Layer: 0
   m_Name: DriverStanding
   m_TagString: Untagged
@@ -134,3 +135,15 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &-3449360103865178300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4591736429782299405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53cb534f28c6a4725b3ef1a8e6fef6cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

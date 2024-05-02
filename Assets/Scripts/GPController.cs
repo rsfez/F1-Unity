@@ -5,7 +5,13 @@ using UnityEngine;
 public class GPController : MonoBehaviour
 {
     public readonly Dictionary<short, Driver> drivers = new();
+    new public GameObject camera;
     private readonly HashSet<Team> teams = new();
+
+    void Awake()
+    {
+        camera = GetComponentInChildren<Camera>().gameObject;
+    }
 
     void Start()
     {
@@ -19,6 +25,8 @@ public class GPController : MonoBehaviour
         {
             DriverController driverController = DriverController.Create(textAsset.name);
             Driver driver = driverController.driver;
+            GameObject driverGameObject = driverController.gameObject;
+            driver.gameObject = driverGameObject;
             drivers[short.Parse(driver.number)] = driver;
             AssignDriverToTeam(driver);
             standings.Add(driver);

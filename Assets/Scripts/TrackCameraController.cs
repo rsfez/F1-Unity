@@ -5,7 +5,6 @@ public class TrackCameraController : MonoBehaviour
 {
     [SerializeField]
     public GameObject track;
-
     new private Camera camera;
     private float maxOrthographicSize = float.MaxValue;
     private Vector3 targetPosition;
@@ -27,6 +26,7 @@ public class TrackCameraController : MonoBehaviour
 
     void Update()
     {
+        if (!enabled) return;
         if (Screen.width != screenWidth)
         {
             screenWidth = Screen.width;

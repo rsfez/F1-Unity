@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Video;
 
 public class StandingsController : MonoBehaviour
 {
@@ -124,6 +122,7 @@ public class StandingsController : MonoBehaviour
             GameObject driverStanding = Instantiate(Resources.Load("Prefabs/DriverStanding") as GameObject);
             driverStanding.GetComponent<TextMeshProUGUI>().text = driver.abbreviation;
             driverStanding.transform.SetParent(transform);
+            driverStanding.GetComponent<DriverStandingController>().SetDriver(driver);
         }
     }
 }

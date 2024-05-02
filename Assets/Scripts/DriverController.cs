@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,11 +11,12 @@ public class DriverController : MonoBehaviour
         GetComponentInChildren<TextMeshPro>().text = driver.number;
     }
 
-    public static DriverController Create(String abbreviation)
+    public static DriverController Create(string abbreviation)
     {
         GameObject driverGameObject = Instantiate(Resources.Load("Prefabs/Driver") as GameObject);
         DriverController driverController = driverGameObject.GetComponent<DriverController>();
         Driver driver = Driver.FromCSV(abbreviation);
+        driverGameObject.name = abbreviation;
         driverController.driver = driver;
         return driverController;
     }
