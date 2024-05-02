@@ -4,9 +4,13 @@ using UnityEngine.EventSystems;
 
 public class DriverStandingController : MonoBehaviour, IPointerClickHandler
 {
-    private Driver driver;
-    private GPController gPController;
-    private bool isSelected = false;
+    [SerializeField]
+    public Color32 colorPrimary;
+    [SerializeField]
+    public Color32 colorSecondary;
+    public Driver driver;
+    private TextMeshProUGUI text;
+    private StandingsController standingsController;
 
     public static GameObject CreateGameObject(Transform root, Driver driver)
     {
@@ -19,13 +23,18 @@ public class DriverStandingController : MonoBehaviour, IPointerClickHandler
 
     void Awake()
     {
-        gPController = GameObject.FindGameObjectWithTag("GP").GetComponent<GPController>();
+        text = GetComponent<TextMeshProUGUI>();
+        standingsController = GameObject.FindGameObjectWithTag("Standings").GetComponent<StandingsController>();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        gPController.camera.GetComponent<DriverCameraController>().SetDriver(isSelected ? null : driver);
-        isSelected = !isSelected;
+        standingsController.SetDriverSelected(this);
+    }
+
+    public void OnDriverSelected(bool selected)
+    {
+        text.color = selected ? colorSecondary : colorPrimary;
     }
 
     public void SetDriver(Driver driver)

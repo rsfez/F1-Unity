@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class StandingsController : MonoBehaviour
 {
@@ -14,6 +13,7 @@ public class StandingsController : MonoBehaviour
     public SortedSet<Driver> standings = new();
     private Timer timer;
     private GPController gpController;
+    private DriverStandingController currentlySelectedDriverController;
 
     void Awake()
     {
@@ -49,6 +49,19 @@ public class StandingsController : MonoBehaviour
         }
         Populate();
     }
+
+    public void SetDriverSelected(DriverStandingController driverStandingController)
+     {
+        if (currentlySelectedDriverController == driverStandingController) {
+            currentlySelectedDriverController.OnDriverSelected(false);
+            currentlySelectedDriverController = null;
+        } else {
+            if (currentlySelectedDriverController != null) currentlySelectedDriverController?.OnDriverSelected(false);
+            currentlySelectedDriverController = driverStandingController;
+            currentlySelectedDriverController.OnDriverSelected(true);
+        }
+        gpController.camera.GetComponent<DriverCameraController>().SetDriver(currentlySelectedDriverController != null ? currentlySelectedDriverController.driver : null);
+     }
 
     private void UpdateStandings()
     {
