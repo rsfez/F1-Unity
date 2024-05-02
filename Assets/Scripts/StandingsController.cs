@@ -108,21 +108,30 @@ public class StandingsController : MonoBehaviour
         //     standingsString += driver.position + ". " + driver.abbreviation + " <- ";
         // }
         // Debug.Log(standingsString);
-        Populate();
+        
+        ReorderStandings();
+    }
+
+    private void ReorderStandings()
+    {
+        List<GameObject> tempList = new();
+        foreach (Transform child in transform)
+        {
+            tempList.Add(child.gameObject);
+        }
+        transform.DetachChildren();
+        IEnumerable<GameObject> targetOrder = tempList.OrderBy(gameObject => gameObject.GetComponent<DriverStandingController>().GetDriverPosition());
+        foreach (GameObject gameObject in targetOrder){
+            gameObject.transform.SetParent(transform);
+        }
+
     }
 
     private void Populate()
     {
-        foreach (Transform child in transform)
-        {
-            Destroy(child.GameObject());
-        }
         foreach (Driver driver in standings)
         {
-            GameObject driverStanding = Instantiate(Resources.Load("Prefabs/DriverStanding") as GameObject);
-            driverStanding.GetComponent<TextMeshProUGUI>().text = driver.abbreviation;
-            driverStanding.transform.SetParent(transform);
-            driverStanding.GetComponent<DriverStandingController>().SetDriver(driver);
+            DriverStandingController.CreateGameObject(transform, driver);
         }
     }
 }
