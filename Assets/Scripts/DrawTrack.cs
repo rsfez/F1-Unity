@@ -12,7 +12,7 @@ public class DrawTrack : MonoBehaviour
         lineRenderer.positionCount = points.Length;
         lineRenderer.SetPositions(points);
 
-        if (camera != null) camera.GetComponent<CameraController>().FitCameraToLineTrack(lineRenderer);
+        if (camera != null) camera.GetComponent<TrackCameraController>().FitCameraToTrack();
     }
 
     private Vector3[] LoadTrack()

@@ -1,43 +1,49 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CameraController : MonoBehaviour
+public class TrackCameraController : MonoBehaviour
 {
-    public float minOrthographicSize = 800f;
-
-    public int nbOfZoomSteps = 3;
+    [SerializeField]
+    public GameObject track;
 
     new private Camera camera;
     private float maxOrthographicSize = float.MaxValue;
     private Vector3 targetPosition;
-    private LineRenderer track;
+    private int screenWidth;
+    private readonly float minOrthographicSize = 800f;
+    private readonly int nbOfZoomSteps = 3;
+    private LineRenderer trackLineRenderer;
 
     void Awake()
     {
         camera = GetComponent<Camera>();
+        trackLineRenderer = track.GetComponent<LineRenderer>();
     }
 
     void Start()
     {
-        LeaveRoomToUI();
+        FitCameraToTrack();
     }
 
     void Update()
     {
+        if (Screen.width != screenWidth)
+        {
+            screenWidth = Screen.width;
+            LeaveRoomToUI();
+        }
         HandleZoom();
     }
 
-    public void FitCameraToLineTrack(LineRenderer lineRenderer)
+    public void FitCameraToTrack()
     {
-
-        track = lineRenderer;
-        if (track == null || track.positionCount <= 0)
+        if (trackLineRenderer == null || trackLineRenderer.positionCount <= 0)
             return;
 
-        Bounds bounds = new(track.GetPosition(0), Vector3.zero);
-        for (int i = 0; i < track.positionCount; i++)
+        Bounds bounds = new(trackLineRenderer.GetPosition(0), Vector3.zero);
+        for (int i = 0; i < trackLineRenderer.positionCount; i++)
         {
-            bounds.Encapsulate(track.GetPosition(i));
+            bounds.Encapsulate(trackLineRenderer.GetPosition(i));
         }
 
         Vector3 boundsSize = bounds.size;
@@ -66,11 +72,8 @@ public class CameraController : MonoBehaviour
         // Optionally, adjust the near and far clipping planes
         camera.nearClipPlane = -boundsSize.magnitude; // Using negative value as orthographic camera can view 'behind' its position
         camera.farClipPlane = boundsSize.magnitude;
-    }
 
-    private void FitCameraToTrack()
-    {
-        FitCameraToLineTrack(track);
+        LeaveRoomToUI();
     }
 
     private void HandleZoom()
@@ -88,7 +91,7 @@ public class CameraController : MonoBehaviour
 
         if (scroll > 0)
         {
-            Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -transform.position.z);
+            Vector3 mousePos = new(Input.mousePosition.x, Input.mousePosition.y, -transform.position.z);
             targetPosition = camera.ScreenToWorldPoint(mousePos);
         }
         else if (scroll < 0)

@@ -700,8 +700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ef54e6700e040d59de43ab8f1a2020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minOrthographicSize: 800
-  nbOfZoomSteps: 3
+  track: {fileID: 82155740}
 --- !u!1 &769131928
 GameObject:
   m_ObjectHideFlags: 0
