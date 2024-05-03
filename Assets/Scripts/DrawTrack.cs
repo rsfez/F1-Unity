@@ -3,11 +3,11 @@ using UnityEngine;
 public class DrawTrack : MonoBehaviour
 {
     public LineRenderer lineRenderer;
-    new public GameObject camera;
+    public new GameObject camera;
 
-    void Start()
+    private void Start()
     {
-        Vector3[] points = LoadTrack();
+        var points = LoadTrack();
 
         lineRenderer.positionCount = points.Length;
         lineRenderer.SetPositions(points);
@@ -17,12 +17,12 @@ public class DrawTrack : MonoBehaviour
 
     private Vector3[] LoadTrack()
     {
-        string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/track");
-        Vector3[] points = new Vector3[csv.Length];
+        var csv = CSVUtils.Parse("Data/2023/Japan/R/track");
+        var points = new Vector3[csv.Length];
 
-        for (int y = 0; y < csv.Length; y++)
+        for (var y = 0; y < csv.Length; y++)
         {
-            Vector3 point = CSVLineToTrackPoint(csv[y]);
+            var point = CSVLineToTrackPoint(csv[y]);
             points[y] = point;
         }
 

@@ -5,12 +5,12 @@ public class DriverCameraController : MonoBehaviour
     private Driver driver;
     private TrackCameraController trackCameraController;
 
-    void Awake()
+    private void Awake()
     {
         trackCameraController = GetComponent<TrackCameraController>();
     }
 
-    void Update()
+    private void Update()
     {
         if (driver == null) return;
         transform.position = new Vector3(driver.gameObject.transform.position.x, driver.gameObject.transform.position.y, transform.position.z);

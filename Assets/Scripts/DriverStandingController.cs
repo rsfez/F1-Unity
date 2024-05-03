@@ -14,14 +14,14 @@ public class DriverStandingController : MonoBehaviour, IPointerClickHandler
 
     public static GameObject CreateGameObject(Transform root, Driver driver)
     {
-        GameObject driverStanding = Instantiate(Resources.Load("Prefabs/DriverStanding") as GameObject);
+        var driverStanding = Instantiate(Resources.Load("Prefabs/DriverStanding") as GameObject);
         driverStanding.GetComponent<TextMeshProUGUI>().text = driver.abbreviation;
         driverStanding.transform.SetParent(root);
         driverStanding.GetComponent<DriverStandingController>().SetDriver(driver);
         return driverStanding;
     }
 
-    void Awake()
+    private void Awake()
     {
         text = GetComponent<TextMeshProUGUI>();
         standingsController = GameObject.FindGameObjectWithTag("Standings").GetComponent<StandingsController>();
@@ -37,7 +37,7 @@ public class DriverStandingController : MonoBehaviour, IPointerClickHandler
         text.color = selected ? colorSecondary : colorPrimary;
     }
 
-    public void SetDriver(Driver driver)
+    private void SetDriver(Driver driver)
     {
         this.driver = driver;
         name = driver.position + ". " + driver.abbreviation;

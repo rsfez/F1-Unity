@@ -9,7 +9,7 @@ public class Team
 
     public readonly HashSet<Driver> drivers = new HashSet<Driver>();
 
-    public Team(string name, string id, Color color)
+    private Team(string name, string id, Color color)
     {
         this.name = name;
         this.id = id;
@@ -18,9 +18,9 @@ public class Team
 
     public static Team FromCSV(string[][] csv)
     {
-        string name = csv[4][0];
-        string id = csv[6][0];
-        Color color = ColorUtils.HexToColor(csv[5][0]);
+        var name = csv[4][0];
+        var id = csv[6][0];
+        var color = ColorUtils.HexToColor(csv[5][0]);
         return new Team(name, id, color);
     }
 

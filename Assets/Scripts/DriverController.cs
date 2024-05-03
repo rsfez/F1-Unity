@@ -5,7 +5,7 @@ public class DriverController : MonoBehaviour
 {
     public Driver driver;
 
-    void Start()
+    private void Start()
     {
         GetComponent<SpriteRenderer>().color = driver.team.color;
         GetComponentInChildren<TextMeshPro>().text = driver.number;
@@ -13,9 +13,9 @@ public class DriverController : MonoBehaviour
 
     public static DriverController Create(string abbreviation)
     {
-        GameObject driverGameObject = Instantiate(Resources.Load("Prefabs/Driver") as GameObject);
-        DriverController driverController = driverGameObject.GetComponent<DriverController>();
-        Driver driver = Driver.FromCSV(abbreviation);
+        var driverGameObject = Instantiate(Resources.Load("Prefabs/Driver") as GameObject);
+        var driverController = driverGameObject.GetComponent<DriverController>();
+        var driver = Driver.FromCSV(abbreviation);
         driverGameObject.name = abbreviation;
         driverController.driver = driver;
         return driverController;

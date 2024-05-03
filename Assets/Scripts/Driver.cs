@@ -2,16 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Driver : IComparable<Driver>
 {
     public readonly string number, abbreviation;
+    public GameObject gameObject;
+    public TelemetryEvent lastVisitedTelemetryEvent;
     public short position;
     public Team team;
-    public TelemetryEvent lastVisitedTelemetryEvent;
-    public GameObject gameObject;
 
-    public Driver(string number, string abbreviation, short position)
+    private Driver(string number, string abbreviation, short position)
     {
         this.number = number;
         this.abbreviation = abbreviation;
@@ -20,11 +19,16 @@ public class Driver : IComparable<Driver>
         lastVisitedTelemetryEvent = TelemetryEvent.LoadTelemetryEventsFromCSV(abbreviation);
     }
 
+    public int CompareTo(Driver other)
+    {
+        return other == null ? 1 : position.CompareTo(other.position);
+    }
+
     public static Driver FromCSV(string abbreviation)
     {
-        string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
-        string number = csv[0][0];
-        short position = (short)float.Parse(csv[14][0]);
+        var csv = CSVUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
+        var number = csv[0][0];
+        var position = (short)float.Parse(csv[14][0]);
         Driver driver = new(
             number,
             abbreviation,
@@ -38,10 +42,7 @@ public class Driver : IComparable<Driver>
 
     public override bool Equals(object obj)
     {
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return false;
-        }
+        if (obj == null || GetType() != obj.GetType()) return false;
 
         var other = (Driver)obj;
         return number == other.number;
@@ -57,12 +58,6 @@ public class Driver : IComparable<Driver>
         return abbreviation + " in position: " + position + ". Behind: " + lastVisitedTelemetryEvent.driverAhead;
     }
 
-    public int CompareTo(Driver other)
-    {
-        if (other == null) return 1;
-        return position.CompareTo(other.position);
-    }
-
     public short GetDriverAheadNumber()
     {
         return lastVisitedTelemetryEvent.driverAhead;
@@ -70,7 +65,6 @@ public class Driver : IComparable<Driver>
 
     public Driver GetDriverAhead(Dictionary<short, Driver> drivers)
     {
-        if (lastVisitedTelemetryEvent.driverAhead == 0) return null;
-        return drivers[lastVisitedTelemetryEvent.driverAhead];
+        return lastVisitedTelemetryEvent.driverAhead == 0 ? null : drivers[lastVisitedTelemetryEvent.driverAhead];
     }
 }

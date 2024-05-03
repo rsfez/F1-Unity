@@ -7,14 +7,14 @@ public class MutiplicatorButtonController : MonoBehaviour
     public short mutiplicator = 1;
     private Timer timer;
 
-    void Start()
+    private void Start()
     {
         timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
         GetComponent<Button>().onClick.AddListener(OnClick);
         GetComponentInChildren<TextMeshProUGUI>().text = "x" + mutiplicator;
     }
 
-    void OnClick()
+    private void OnClick()
     {
         timer.SetMulitiplicator(mutiplicator);
     }

@@ -4,33 +4,34 @@ using UnityEngine;
 
 public class GPController : MonoBehaviour
 {
+    public new GameObject camera;
     public readonly Dictionary<short, Driver> drivers = new();
-    new public GameObject camera;
     private readonly HashSet<Team> teams = new();
 
-    void Awake()
+    private void Awake()
     {
         camera = GetComponentInChildren<Camera>().gameObject;
     }
 
-    void Start()
+    private void Start()
     {
         StartCoroutine(LoadDrivers());
     }
 
     private IEnumerator LoadDrivers()
     {
-        StandingsController standings = GameObject.FindWithTag("Standings").GetComponent<StandingsController>();
-        foreach (TextAsset textAsset in Resources.LoadAll<TextAsset>("Data/2023/Japan/R/drivers/"))
+        var standings = GameObject.FindWithTag("Standings").GetComponent<StandingsController>();
+        foreach (var textAsset in Resources.LoadAll<TextAsset>("Data/2023/Japan/R/drivers/"))
         {
-            DriverController driverController = DriverController.Create(textAsset.name);
-            Driver driver = driverController.driver;
-            GameObject driverGameObject = driverController.gameObject;
+            var driverController = DriverController.Create(textAsset.name);
+            var driver = driverController.driver;
+            var driverGameObject = driverController.gameObject;
             driver.gameObject = driverGameObject;
             drivers[short.Parse(driver.number)] = driver;
             AssignDriverToTeam(driver);
             standings.Add(driver);
         }
+
         standings.HandleDriversStartingFromPits();
         yield return null;
     }
@@ -39,7 +40,7 @@ public class GPController : MonoBehaviour
     {
         if (teams.Contains(driver.team))
         {
-            teams.TryGetValue(driver.team, out Team team);
+            teams.TryGetValue(driver.team, out var team);
             driver.team = team;
         }
         else

@@ -1,18 +1,18 @@
 using TMPro;
 using UnityEngine;
 
-class TimerTextController : MonoBehaviour
+public class TimerTextController : MonoBehaviour
 {
     private TextMeshProUGUI timerText;
     private Timer timer;
 
-    void Start()
+    private void Start()
     {
         timerText = GetComponent<TextMeshProUGUI>();
         timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
     }
 
-    void Update()
+    private void Update()
     {
         timerText.text = timer.GetTimerText();
     }

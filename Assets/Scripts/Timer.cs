@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    private float timer = 0;
+    private float timer;
     private short mutiplicator = 1;
-    private bool timerRunning = false;
+    private bool timerRunning;
 
     void Update()
     {
@@ -37,11 +37,11 @@ public class Timer : MonoBehaviour
 
     public string GetTimerText()
     {
-        long totalSeconds = (long)timer / 1000;
-        int minutes = (int)(totalSeconds / 60);
-        int seconds = (int)(totalSeconds % 60);
-        int milliseconds = (int)(timer % 1000);
-        return string.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, milliseconds);
+        var totalSeconds = (long)timer / 1000;
+        var minutes = (int)(totalSeconds / 60);
+        var seconds = (int)(totalSeconds % 60);
+        var milliseconds = (int)(timer % 1000);
+        return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
     }
 
     public void SetMulitiplicator(short mutiplicator)

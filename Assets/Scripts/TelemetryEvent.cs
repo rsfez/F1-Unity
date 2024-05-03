@@ -31,12 +31,12 @@ public class TelemetryEvent
 
     public static TelemetryEvent LoadTelemetryEventsFromCSV(String driverAbbreviation)
     {
-        string[][] csv = CSVUtils.Parse("Data/2023/Japan/R/telemetry/" + driverAbbreviation);
+        var csv = CSVUtils.Parse("Data/2023/Japan/R/telemetry/" + driverAbbreviation);
         TelemetryEvent previousTelemetryEvent = null;
         TelemetryEvent firstTelemetryEvent = null;
-        foreach (string[] line in csv)
+        foreach (var line in csv)
         {
-            TelemetryEvent currentTelemetryEvent = TelemetryEvent.GetFromCSVLine(line);
+            var currentTelemetryEvent = TelemetryEvent.GetFromCSVLine(line);
             currentTelemetryEvent.previous = previousTelemetryEvent;
             if (previousTelemetryEvent != null)
             {

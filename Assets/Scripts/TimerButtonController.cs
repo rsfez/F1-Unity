@@ -8,7 +8,7 @@ public class TimerButtonController : MonoBehaviour
     private Button button;
     private TextMeshProUGUI buttonText;
 
-    void Start()
+    private void Start()
     {
         timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
         buttonText = GetComponentInChildren<TextMeshProUGUI>();
@@ -16,7 +16,7 @@ public class TimerButtonController : MonoBehaviour
         button.onClick.AddListener(OnButtonClick);
     }
 
-    void OnButtonClick()
+    private void OnButtonClick()
     {
         if (timer.IsRunning())
         {
