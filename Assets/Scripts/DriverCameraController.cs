@@ -3,24 +3,25 @@ using UnityEngine;
 
 public class DriverCameraController : MonoBehaviour
 {
-    private Driver driver;
-    private TrackCameraController trackCameraController;
+    private Driver _driver;
+    private TrackCameraController _trackCameraController;
 
     private void Awake()
     {
-        trackCameraController = GetComponent<TrackCameraController>();
+        _trackCameraController = GetComponent<TrackCameraController>();
     }
 
     private void Update()
     {
-        if (driver == null) return;
-        transform.position = new Vector3(driver.gameObject.transform.position.x, driver.gameObject.transform.position.y, transform.position.z);
+        if (_driver == null) return;
+        transform.position = new Vector3(_driver.GameObject.transform.position.x,
+            _driver.GameObject.transform.position.y, transform.position.z);
     }
 
     public void SetDriver(Driver driver)
     {
-        this.driver = driver;
+        _driver = driver;
         enabled = driver != null;
-        trackCameraController.enabled = !enabled;
+        _trackCameraController.enabled = !enabled;
     }
 }

@@ -3,23 +3,22 @@ using UnityEngine.EventSystems;
 
 public class TrackCameraController : MonoBehaviour
 {
-    [SerializeField] public GameObject track;
-    
     // Add "padding" to the camera area, so the track is not hugging borders
-    private readonly float maxOrthographicSizeOffset = 100f;
+    private const float MaxOrthographicSizeOffset = 100f;
+    private const float MinOrthographicSize = 800f;
+    private const int NbOfZoomSteps = 3;
+    [SerializeField] public GameObject track;
 
-    private readonly float minOrthographicSize = 800f;
-    private readonly int nbOfZoomSteps = 3;
-    private new Camera camera;
-    private float maxOrthographicSize = float.MaxValue;
-    private int screenWidth;
-    private Vector3 targetPosition;
-    private LineRenderer trackLineRenderer;
+    private Camera _camera;
+    private float _maxOrthographicSize = float.MaxValue;
+    private int _screenWidth;
+    private Vector3 _targetPosition;
+    private LineRenderer _trackLineRenderer;
 
     private void Awake()
     {
-        camera = GetComponent<Camera>();
-        trackLineRenderer = track.GetComponent<LineRenderer>();
+        _camera = GetComponent<Camera>();
+        _trackLineRenderer = track.GetComponent<LineRenderer>();
     }
 
     private void Start()
@@ -30,9 +29,9 @@ public class TrackCameraController : MonoBehaviour
     private void Update()
     {
         if (!enabled) return;
-        if (Screen.width != screenWidth)
+        if (Screen.width != _screenWidth)
         {
-            screenWidth = Screen.width;
+            _screenWidth = Screen.width;
             LeaveRoomToUI();
         }
 
@@ -41,14 +40,15 @@ public class TrackCameraController : MonoBehaviour
 
     public void FitCameraToTrack()
     {
-        if (!trackLineRenderer || trackLineRenderer.positionCount <= 0)
+        if (!_trackLineRenderer || _trackLineRenderer.positionCount <= 0)
             return;
 
-        Bounds bounds = new(trackLineRenderer.GetPosition(0), Vector3.zero);
-        for (var i = 0; i < trackLineRenderer.positionCount; i++) bounds.Encapsulate(trackLineRenderer.GetPosition(i));
+        Bounds bounds = new(_trackLineRenderer.GetPosition(0), Vector3.zero);
+        for (var i = 0; i < _trackLineRenderer.positionCount; i++)
+            bounds.Encapsulate(_trackLineRenderer.GetPosition(i));
 
         var boundsSize = bounds.size;
-        var aspectRatio = camera.aspect;
+        var aspectRatio = _camera.aspect;
 
         // Determine the orthographic size
         float orthographicSize;
@@ -59,19 +59,19 @@ public class TrackCameraController : MonoBehaviour
             // For taller screens, use half the bounds height
             orthographicSize = boundsSize.y / 2f;
 
-        orthographicSize += maxOrthographicSizeOffset;
+        orthographicSize += MaxOrthographicSizeOffset;
 
         // Set the orthographic size
-        camera.orthographicSize = orthographicSize;
-        maxOrthographicSize = orthographicSize;
+        _camera.orthographicSize = orthographicSize;
+        _maxOrthographicSize = orthographicSize;
 
         // Set the camera position
         transform.position = new Vector3(bounds.center.x, bounds.center.y, transform.position.z);
 
         // Optionally, adjust the near and far clipping planes
-        camera.nearClipPlane =
+        _camera.nearClipPlane =
             -boundsSize.magnitude; // Using negative value as orthographic camera can view 'behind' its position
-        camera.farClipPlane = boundsSize.magnitude;
+        _camera.farClipPlane = boundsSize.magnitude;
 
         LeaveRoomToUI();
     }
@@ -86,33 +86,33 @@ public class TrackCameraController : MonoBehaviour
         if (scroll == 0)
             return;
 
-        camera.orthographicSize -= scroll * (maxOrthographicSize / nbOfZoomSteps);
-        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, minOrthographicSize, maxOrthographicSize);
+        _camera.orthographicSize -= scroll * (_maxOrthographicSize / NbOfZoomSteps);
+        _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize, MinOrthographicSize, _maxOrthographicSize);
 
         switch (scroll)
         {
             case > 0:
             {
                 Vector3 mousePos = new(Input.mousePosition.x, Input.mousePosition.y, -transform.position.z);
-                targetPosition = camera.ScreenToWorldPoint(mousePos);
+                _targetPosition = _camera.ScreenToWorldPoint(mousePos);
                 break;
             }
             case < 0:
-                targetPosition = transform.position;
+                _targetPosition = transform.position;
                 break;
         }
 
         // Move the camera towards the target position
-        if (camera.orthographicSize >= maxOrthographicSize)
+        if (_camera.orthographicSize >= _maxOrthographicSize)
             FitCameraToTrack();
         else
-            transform.position = new Vector3(targetPosition.x, targetPosition.y, transform.position.z);
+            transform.position = new Vector3(_targetPosition.x, _targetPosition.y, transform.position.z);
     }
 
     private void LeaveRoomToUI()
     {
-        var rect = camera.rect;
+        var rect = _camera.rect;
         rect.x = GameObject.FindWithTag("LeftPanel").GetComponent<RectTransform>().sizeDelta.x / Screen.width;
-        camera.rect = rect;
+        _camera.rect = rect;
     }
 }

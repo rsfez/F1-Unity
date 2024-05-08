@@ -4,50 +4,47 @@ namespace Models
 {
     public class Timer : MonoBehaviour
     {
-        private float timer;
-        private short mutiplicator = 1;
-        private bool timerRunning;
+        private short _multiplicator = 1;
+        private float _timer;
+        private bool _timerRunning;
 
-        void Update()
+        private void Update()
         {
-            if (timerRunning)
-            {
-                timer += Time.deltaTime * 1000 * mutiplicator;
-            }
+            if (_timerRunning) _timer += Time.deltaTime * 1000 * _multiplicator;
         }
 
         public void StartTimer()
         {
-            timerRunning = true;
+            _timerRunning = true;
         }
 
         public void PauseTimer()
         {
-            timerRunning = false;
+            _timerRunning = false;
         }
 
         public bool IsRunning()
         {
-            return timerRunning;
+            return _timerRunning;
         }
 
         public long GetTime()
         {
-            return (long)timer;
+            return (long)_timer;
         }
 
         public string GetTimerText()
         {
-            var totalSeconds = (long)timer / 1000;
+            var totalSeconds = (long)_timer / 1000;
             var minutes = (int)(totalSeconds / 60);
             var seconds = (int)(totalSeconds % 60);
-            var milliseconds = (int)(timer % 1000);
+            var milliseconds = (int)(_timer % 1000);
             return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
         }
 
-        public void SetMulitiplicator(short mutiplicator)
+        public void SetMultiplier(short multiplicator)
         {
-            this.mutiplicator = mutiplicator;
+            _multiplicator = multiplicator;
         }
     }
 }

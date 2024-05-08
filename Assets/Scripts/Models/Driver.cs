@@ -1,46 +1,30 @@
 using System;
 using System.Collections.Generic;
+using Models.Builders;
 using UnityEngine;
-using Utils;
 
 namespace Models
 {
     public class Driver : IComparable<Driver>
     {
-        public readonly string number, abbreviation;
-        public GameObject gameObject;
-        public TelemetryEvent lastVisitedTelemetryEvent;
-        public short position;
-        public Team team;
+        public readonly string Number, Abbreviation;
+        public GameObject GameObject;
+        public TelemetryEvent LastVisitedTelemetryEvent;
+        public short Position;
+        public Team Team;
 
-        private Driver(string number, string abbreviation, short position)
+        public Driver(string number, string abbreviation, short position)
         {
-            this.number = number;
-            this.abbreviation = abbreviation;
-            this.position = position;
+            Number = number;
+            Abbreviation = abbreviation;
+            Position = position;
 
-            lastVisitedTelemetryEvent = TelemetryEvent.LoadTelemetryEventsFromCSV(abbreviation);
+            LastVisitedTelemetryEvent = TelemetryEventBuilder.Instance.Build(abbreviation);
         }
 
         public int CompareTo(Driver other)
         {
-            return other == null ? 1 : position.CompareTo(other.position);
-        }
-
-        public static Driver FromCSV(string abbreviation)
-        {
-            var csv = CsvUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
-            var number = csv[0][0];
-            var position = (short)float.Parse(csv[14][0]);
-            Driver driver = new(
-                number,
-                abbreviation,
-                position
-            )
-            {
-                team = Team.FromCSV(csv)
-            };
-            return driver;
+            return other == null ? 1 : Position.CompareTo(other.Position);
         }
 
         public override bool Equals(object obj)
@@ -48,27 +32,22 @@ namespace Models
             if (obj == null || GetType() != obj.GetType()) return false;
 
             var other = (Driver)obj;
-            return number == other.number;
+            return Number == other.Number;
         }
 
         public override int GetHashCode()
         {
-            return number.GetHashCode();
+            return Number.GetHashCode();
         }
 
         public override string ToString()
         {
-            return abbreviation + " in position: " + position + ". Behind: " + lastVisitedTelemetryEvent.driverAhead;
-        }
-
-        public short GetDriverAheadNumber()
-        {
-            return lastVisitedTelemetryEvent.driverAhead;
+            return Abbreviation + " in position: " + Position + ". Behind: " + LastVisitedTelemetryEvent.DriverAhead;
         }
 
         public Driver GetDriverAhead(Dictionary<short, Driver> drivers)
         {
-            return lastVisitedTelemetryEvent.driverAhead == 0 ? null : drivers[lastVisitedTelemetryEvent.driverAhead];
+            return LastVisitedTelemetryEvent.DriverAhead == 0 ? null : drivers[LastVisitedTelemetryEvent.DriverAhead];
         }
     }
 }

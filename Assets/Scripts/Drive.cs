@@ -6,31 +6,31 @@ using UnityEngine.Splines;
 
 public class Drive : MonoBehaviour
 {
-    private readonly int segmentSize = 50;
-    private Driver driver;
-    private TelemetryEvent segmentStart, segmentEnd;
-    private Spline spline;
-    private Timer timer;
+    private const int SegmentSize = 50;
+    private Driver _driver;
+    private TelemetryEvent _segmentStart, _segmentEnd;
+    private Spline _spline;
+    private Timer _timer;
 
     private void Start()
     {
-        driver = GetComponent<DriverController>().driver;
-        timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
+        _driver = GetComponent<DriverController>().Driver;
+        _timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
         var splineContainer = GameObject.FindWithTag("GP").AddComponent<SplineContainer>();
-        spline = splineContainer.Spline;
-        InitSpline(driver.lastVisitedTelemetryEvent);
-        transform.position = spline.Knots.First().Position;
+        _spline = splineContainer.Spline;
+        InitSpline(_driver.LastVisitedTelemetryEvent);
+        transform.position = _spline.Knots.First().Position;
     }
 
     public void Update()
     {
-        if (driver == null || !timer || spline == null || !timer.IsRunning()) return;
+        if (_driver == null || !_timer || _spline == null || !_timer.IsRunning()) return;
         var normalizedTime = GetNormalizedTime();
-        var currentTime = timer.GetTime();
+        var currentTime = _timer.GetTime();
 
         // "Fast-forward" to lastly covered telemetry event 
-        while (currentTime > driver.lastVisitedTelemetryEvent.time)
-            driver.lastVisitedTelemetryEvent = driver.lastVisitedTelemetryEvent.next;
+        while (currentTime > _driver.LastVisitedTelemetryEvent.Time)
+            _driver.LastVisitedTelemetryEvent = _driver.LastVisitedTelemetryEvent.Next;
 
         // Reset spline when it gets close to the end to continue with smooth interpolation
         if (normalizedTime > 0.90)
@@ -39,46 +39,46 @@ public class Drive : MonoBehaviour
         }
         else
         {
-            var position = spline.EvaluatePosition(normalizedTime);
+            var position = _spline.EvaluatePosition(normalizedTime);
             transform.position = position;
         }
     }
 
     private void UpdateSplineSegment(long currentTime)
     {
-        while (currentTime > segmentStart.time)
+        while (currentTime > _segmentStart.Time)
         {
-            segmentStart = segmentStart.next;
-            segmentEnd = segmentEnd.next;
-            spline.RemoveAt(0);
-            spline.Add(new BezierKnot(segmentEnd.position));
+            _segmentStart = _segmentStart.Next;
+            _segmentEnd = _segmentEnd.Next;
+            _spline.RemoveAt(0);
+            _spline.Add(new BezierKnot(_segmentEnd.Position));
         }
 
         // Using the current position to start the new segment as not to teleport to the next one
-        TelemetryEvent current = new(transform.position, currentTime, driver.lastVisitedTelemetryEvent.driverAhead)
+        TelemetryEvent current = new(transform.position, currentTime, _driver.LastVisitedTelemetryEvent.DriverAhead)
         {
-            next = segmentStart
+            Next = _segmentStart
         };
-        segmentStart = current;
-        spline.Insert(0, new BezierKnot(current.position));
-        spline.RemoveAt(spline.Knots.Count() - 1);
+        _segmentStart = current;
+        _spline.Insert(0, new BezierKnot(current.Position));
+        _spline.RemoveAt(_spline.Knots.Count() - 1);
     }
 
     private void InitSpline(TelemetryEvent segmentStart)
     {
-        this.segmentStart = segmentStart;
+        _segmentStart = segmentStart;
         var current = segmentStart;
-        for (var i = 0; i < segmentSize; i++)
+        for (var i = 0; i < SegmentSize; i++)
         {
-            spline.Add(new BezierKnot(new float3(current.position.x, current.position.y, 0)));
-            current = current.next;
+            _spline.Add(new BezierKnot(new float3(current.Position.x, current.Position.y, 0)));
+            current = current.Next;
         }
 
-        segmentEnd = current;
+        _segmentEnd = current;
     }
 
     private float GetNormalizedTime()
     {
-        return (timer.GetTime() - (float)segmentStart.time) / (segmentEnd.time - (float)segmentStart.time);
+        return (_timer.GetTime() - (float)_segmentStart.Time) / (_segmentEnd.Time - (float)_segmentStart.Time);
     }
 }

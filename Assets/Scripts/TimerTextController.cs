@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class TimerTextController : MonoBehaviour
 {
-    private TextMeshProUGUI timerText;
-    private Timer timer;
+    private Timer _timer;
+    private TextMeshProUGUI _timerText;
 
-    private void Start()
+    private void Awake()
     {
-        timerText = GetComponent<TextMeshProUGUI>();
-        timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
+        _timerText = GetComponent<TextMeshProUGUI>();
+        _timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
     }
 
     private void Update()
     {
-        timerText.text = timer.GetTimerText();
+        _timerText.text = _timer.GetTimerText();
     }
 }

@@ -1,24 +1,25 @@
 using Models;
+using Models.Builders;
 using TMPro;
 using UnityEngine;
 
 public class DriverController : MonoBehaviour
 {
-    public Driver driver;
+    public Driver Driver;
 
     private void Start()
     {
-        GetComponent<SpriteRenderer>().color = driver.team.color;
-        GetComponentInChildren<TextMeshPro>().text = driver.number;
+        GetComponent<SpriteRenderer>().color = Driver.Team.Color;
+        GetComponentInChildren<TextMeshPro>().text = Driver.Number;
     }
 
     public static DriverController Create(string abbreviation)
     {
         var driverGameObject = Instantiate(Resources.Load("Prefabs/Driver") as GameObject);
         var driverController = driverGameObject.GetComponent<DriverController>();
-        var driver = Driver.FromCSV(abbreviation);
+        var driver = DriverBuilder.Instance.Build(abbreviation);
         driverGameObject.name = abbreviation;
-        driverController.driver = driver;
+        driverController.Driver = driver;
         return driverController;
     }
 }

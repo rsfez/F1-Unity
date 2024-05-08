@@ -5,29 +5,33 @@ using UnityEngine.UI;
 
 public class TimerButtonController : MonoBehaviour
 {
-    private Timer timer;
-    private Button button;
-    private TextMeshProUGUI buttonText;
+    private Button _button;
+    private TextMeshProUGUI _buttonText;
+    private Timer _timer;
+
+    private void Awake()
+    {
+        _timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
+        _buttonText = GetComponentInChildren<TextMeshProUGUI>();
+        _button = GetComponent<Button>();
+    }
 
     private void Start()
     {
-        timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
-        buttonText = GetComponentInChildren<TextMeshProUGUI>();
-        button = GetComponent<Button>();
-        button.onClick.AddListener(OnButtonClick);
+        _button.onClick.AddListener(OnButtonClick);
     }
 
     private void OnButtonClick()
     {
-        if (timer.IsRunning())
+        if (_timer.IsRunning())
         {
-            timer.PauseTimer();
-            buttonText.text = "Start";
+            _timer.PauseTimer();
+            _buttonText.text = "Start";
         }
         else
         {
-            timer.StartTimer();
-            buttonText.text = "Pause";
+            _timer.StartTimer();
+            _buttonText.text = "Pause";
         }
     }
 }

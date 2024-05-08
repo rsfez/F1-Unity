@@ -1,45 +1,34 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Utils;
 
 namespace Models
 {
     public class Team
     {
-        public readonly string name, id;
-        public readonly Color color;
+        private readonly string _id;
+        public readonly Color Color;
 
-        public readonly HashSet<Driver> drivers = new HashSet<Driver>();
+        public readonly HashSet<Driver> Drivers = new();
+        public readonly string Name;
 
-        private Team(string name, string id, Color color)
+        public Team(string name, string id, Color color)
         {
-            this.name = name;
-            this.id = id;
-            this.color = color;
-        }
-
-        public static Team FromCSV(string[][] csv)
-        {
-            var name = csv[4][0];
-            var id = csv[6][0];
-            var color = ColorUtils.HexToColor(csv[5][0]);
-            return new Team(name, id, color);
+            Name = name;
+            _id = id;
+            Color = color;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
+            if (obj == null || GetType() != obj.GetType()) return false;
 
             var other = (Team)obj;
-            return id == other.id;
+            return _id == other._id;
         }
 
         public override int GetHashCode()
         {
-            return id.GetHashCode();
+            return _id.GetHashCode();
         }
     }
 }
