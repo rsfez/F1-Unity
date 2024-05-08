@@ -1,44 +1,45 @@
-using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using UnityEngine;
 using Utils;
 
-public class Team
+namespace Models
 {
-    public readonly string name, id;
-    public readonly Color color;
-
-    public readonly HashSet<Driver> drivers = new HashSet<Driver>();
-
-    private Team(string name, string id, Color color)
+    public class Team
     {
-        this.name = name;
-        this.id = id;
-        this.color = color;
-    }
+        public readonly string name, id;
+        public readonly Color color;
 
-    public static Team FromCSV(string[][] csv)
-    {
-        var name = csv[4][0];
-        var id = csv[6][0];
-        var color = ColorUtils.HexToColor(csv[5][0]);
-        return new Team(name, id, color);
-    }
+        public readonly HashSet<Driver> drivers = new HashSet<Driver>();
 
-    public override bool Equals(object obj)
-    {
-        if (obj == null || GetType() != obj.GetType())
+        private Team(string name, string id, Color color)
         {
-            return false;
+            this.name = name;
+            this.id = id;
+            this.color = color;
         }
 
-        var other = (Team)obj;
-        return id == other.id;
-    }
+        public static Team FromCSV(string[][] csv)
+        {
+            var name = csv[4][0];
+            var id = csv[6][0];
+            var color = ColorUtils.HexToColor(csv[5][0]);
+            return new Team(name, id, color);
+        }
 
-    public override int GetHashCode()
-    {
-        return id.GetHashCode();
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (Team)obj;
+            return id == other.id;
+        }
+
+        public override int GetHashCode()
+        {
+            return id.GetHashCode();
+        }
     }
 }

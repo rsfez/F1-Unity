@@ -1,51 +1,53 @@
-using TMPro;
 using UnityEngine;
 
-public class Timer : MonoBehaviour
+namespace Models
 {
-    private float timer;
-    private short mutiplicator = 1;
-    private bool timerRunning;
-
-    void Update()
+    public class Timer : MonoBehaviour
     {
-        if (timerRunning)
+        private float timer;
+        private short mutiplicator = 1;
+        private bool timerRunning;
+
+        void Update()
         {
-            timer += Time.deltaTime * 1000 * mutiplicator;
+            if (timerRunning)
+            {
+                timer += Time.deltaTime * 1000 * mutiplicator;
+            }
         }
-    }
 
-    public void StartTimer()
-    {
-        timerRunning = true;
-    }
+        public void StartTimer()
+        {
+            timerRunning = true;
+        }
 
-    public void PauseTimer()
-    {
-        timerRunning = false;
-    }
+        public void PauseTimer()
+        {
+            timerRunning = false;
+        }
 
-    public bool IsRunning()
-    {
-        return timerRunning;
-    }
+        public bool IsRunning()
+        {
+            return timerRunning;
+        }
 
-    public long GetTime()
-    {
-        return (long)timer;
-    }
+        public long GetTime()
+        {
+            return (long)timer;
+        }
 
-    public string GetTimerText()
-    {
-        var totalSeconds = (long)timer / 1000;
-        var minutes = (int)(totalSeconds / 60);
-        var seconds = (int)(totalSeconds % 60);
-        var milliseconds = (int)(timer % 1000);
-        return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
-    }
+        public string GetTimerText()
+        {
+            var totalSeconds = (long)timer / 1000;
+            var minutes = (int)(totalSeconds / 60);
+            var seconds = (int)(totalSeconds % 60);
+            var milliseconds = (int)(timer % 1000);
+            return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
+        }
 
-    public void SetMulitiplicator(short mutiplicator)
-    {
-        this.mutiplicator = mutiplicator;
+        public void SetMulitiplicator(short mutiplicator)
+        {
+            this.mutiplicator = mutiplicator;
+        }
     }
 }

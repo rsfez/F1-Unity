@@ -1,3 +1,4 @@
+using Models;
 using UnityEngine;
 
 public class DriverCameraController : MonoBehaviour

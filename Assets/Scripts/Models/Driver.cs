@@ -3,69 +3,72 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utils;
 
-public class Driver : IComparable<Driver>
+namespace Models
 {
-    public readonly string number, abbreviation;
-    public GameObject gameObject;
-    public TelemetryEvent lastVisitedTelemetryEvent;
-    public short position;
-    public Team team;
-
-    private Driver(string number, string abbreviation, short position)
+    public class Driver : IComparable<Driver>
     {
-        this.number = number;
-        this.abbreviation = abbreviation;
-        this.position = position;
+        public readonly string number, abbreviation;
+        public GameObject gameObject;
+        public TelemetryEvent lastVisitedTelemetryEvent;
+        public short position;
+        public Team team;
 
-        lastVisitedTelemetryEvent = TelemetryEvent.LoadTelemetryEventsFromCSV(abbreviation);
-    }
-
-    public int CompareTo(Driver other)
-    {
-        return other == null ? 1 : position.CompareTo(other.position);
-    }
-
-    public static Driver FromCSV(string abbreviation)
-    {
-        var csv = CsvUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
-        var number = csv[0][0];
-        var position = (short)float.Parse(csv[14][0]);
-        Driver driver = new(
-            number,
-            abbreviation,
-            position
-        )
+        private Driver(string number, string abbreviation, short position)
         {
-            team = Team.FromCSV(csv)
-        };
-        return driver;
-    }
+            this.number = number;
+            this.abbreviation = abbreviation;
+            this.position = position;
 
-    public override bool Equals(object obj)
-    {
-        if (obj == null || GetType() != obj.GetType()) return false;
+            lastVisitedTelemetryEvent = TelemetryEvent.LoadTelemetryEventsFromCSV(abbreviation);
+        }
 
-        var other = (Driver)obj;
-        return number == other.number;
-    }
+        public int CompareTo(Driver other)
+        {
+            return other == null ? 1 : position.CompareTo(other.position);
+        }
 
-    public override int GetHashCode()
-    {
-        return number.GetHashCode();
-    }
+        public static Driver FromCSV(string abbreviation)
+        {
+            var csv = CsvUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
+            var number = csv[0][0];
+            var position = (short)float.Parse(csv[14][0]);
+            Driver driver = new(
+                number,
+                abbreviation,
+                position
+            )
+            {
+                team = Team.FromCSV(csv)
+            };
+            return driver;
+        }
 
-    public override string ToString()
-    {
-        return abbreviation + " in position: " + position + ". Behind: " + lastVisitedTelemetryEvent.driverAhead;
-    }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType()) return false;
 
-    public short GetDriverAheadNumber()
-    {
-        return lastVisitedTelemetryEvent.driverAhead;
-    }
+            var other = (Driver)obj;
+            return number == other.number;
+        }
 
-    public Driver GetDriverAhead(Dictionary<short, Driver> drivers)
-    {
-        return lastVisitedTelemetryEvent.driverAhead == 0 ? null : drivers[lastVisitedTelemetryEvent.driverAhead];
+        public override int GetHashCode()
+        {
+            return number.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return abbreviation + " in position: " + position + ". Behind: " + lastVisitedTelemetryEvent.driverAhead;
+        }
+
+        public short GetDriverAheadNumber()
+        {
+            return lastVisitedTelemetryEvent.driverAhead;
+        }
+
+        public Driver GetDriverAhead(Dictionary<short, Driver> drivers)
+        {
+            return lastVisitedTelemetryEvent.driverAhead == 0 ? null : drivers[lastVisitedTelemetryEvent.driverAhead];
+        }
     }
 }
