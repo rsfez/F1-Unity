@@ -4,6 +4,9 @@ using UnityEngine.EventSystems;
 public class TrackCameraController : MonoBehaviour
 {
     [SerializeField] public GameObject track;
+    
+    // Add "padding" to the camera area, so the track is not hugging borders
+    private readonly float maxOrthographicSizeOffset = 100f;
 
     private readonly float minOrthographicSize = 800f;
     private readonly int nbOfZoomSteps = 3;
@@ -55,6 +58,8 @@ public class TrackCameraController : MonoBehaviour
         else // Tall aspect ratio
             // For taller screens, use half the bounds height
             orthographicSize = boundsSize.y / 2f;
+
+        orthographicSize += maxOrthographicSizeOffset;
 
         // Set the orthographic size
         camera.orthographicSize = orthographicSize;

@@ -1,10 +1,10 @@
 using UnityEngine;
 using Utils;
 
-public class DrawTrack : MonoBehaviour
+public class DrawTrackController : MonoBehaviour
 {
-    public LineRenderer lineRenderer;
-    public new GameObject camera;
+    [SerializeField] public LineRenderer lineRenderer;
+    [SerializeField] public new GameObject camera;
 
     private void Start()
     {
