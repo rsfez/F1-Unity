@@ -31,6 +31,6 @@ public class DrawTrack : MonoBehaviour
 
     private Vector3 CSVLineToTrackPoint(string[] line)
     {
-        return new Vector3(float.Parse(line[0]), float.Parse(line[1]), 0f);
+        return new Vector3(int.Parse(line[0]), int.Parse(line[1]), 0);
     }
 }
