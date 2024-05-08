@@ -1,4 +1,5 @@
 using UnityEngine;
+using Utils;
 
 public class TelemetryEvent
 {
@@ -30,7 +31,7 @@ public class TelemetryEvent
 
     public static TelemetryEvent LoadTelemetryEventsFromCSV(string driverAbbreviation)
     {
-        var csv = CSVUtils.Parse("Data/2023/Japan/R/telemetry/" + driverAbbreviation);
+        var csv = CsvUtils.Parse("Data/2023/Japan/R/telemetry/" + driverAbbreviation);
         TelemetryEvent previousTelemetryEvent = null;
         TelemetryEvent firstTelemetryEvent = null;
         foreach (var line in csv)

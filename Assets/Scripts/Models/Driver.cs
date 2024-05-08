@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
 public class Driver : IComparable<Driver>
 {
@@ -26,7 +27,7 @@ public class Driver : IComparable<Driver>
 
     public static Driver FromCSV(string abbreviation)
     {
-        var csv = CSVUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
+        var csv = CsvUtils.Parse("Data/2023/Japan/R/drivers/" + abbreviation);
         var number = csv[0][0];
         var position = (short)float.Parse(csv[14][0]);
         Driver driver = new(

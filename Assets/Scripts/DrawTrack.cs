@@ -1,4 +1,5 @@
 using UnityEngine;
+using Utils;
 
 public class DrawTrack : MonoBehaviour
 {
@@ -15,21 +16,21 @@ public class DrawTrack : MonoBehaviour
         if (camera != null) camera.GetComponent<TrackCameraController>().FitCameraToTrack();
     }
 
-    private Vector3[] LoadTrack()
+    private static Vector3[] LoadTrack()
     {
-        var csv = CSVUtils.Parse("Data/2023/Japan/R/track");
+        var csv = CsvUtils.Parse("Data/2023/Japan/R/track");
         var points = new Vector3[csv.Length];
 
         for (var y = 0; y < csv.Length; y++)
         {
-            var point = CSVLineToTrackPoint(csv[y]);
+            var point = CsvLineToTrackPoint(csv[y]);
             points[y] = point;
         }
 
         return points;
     }
 
-    private Vector3 CSVLineToTrackPoint(string[] line)
+    private static Vector3 CsvLineToTrackPoint(string[] line)
     {
         return new Vector3(int.Parse(line[0]), int.Parse(line[1]), 0);
     }
