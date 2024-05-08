@@ -1,12 +1,11 @@
-using System;
 using UnityEngine;
 
 public class TelemetryEvent
 {
+    public readonly short driverAhead;
     public readonly Vector3 position;
     public readonly long time;
     public TelemetryEvent previous, next;
-    public readonly short driverAhead;
 
     public TelemetryEvent(Vector3 position, long time, short driverAhead)
     {
@@ -29,22 +28,20 @@ public class TelemetryEvent
         return new TelemetryEvent(position, currentTime, driverAhead, previous, next);
     }
 
-    public static TelemetryEvent LoadTelemetryEventsFromCSV(String driverAbbreviation)
+    public static TelemetryEvent LoadTelemetryEventsFromCSV(string driverAbbreviation)
     {
         var csv = CSVUtils.Parse("Data/2023/Japan/R/telemetry/" + driverAbbreviation);
         TelemetryEvent previousTelemetryEvent = null;
         TelemetryEvent firstTelemetryEvent = null;
         foreach (var line in csv)
         {
-            var currentTelemetryEvent = TelemetryEvent.GetFromCSVLine(line);
+            var currentTelemetryEvent = GetFromCSVLine(line);
             currentTelemetryEvent.previous = previousTelemetryEvent;
-            if (previousTelemetryEvent != null)
-            {
-                previousTelemetryEvent.next = currentTelemetryEvent;
-            }
+            if (previousTelemetryEvent != null) previousTelemetryEvent.next = currentTelemetryEvent;
             previousTelemetryEvent = currentTelemetryEvent;
             firstTelemetryEvent ??= currentTelemetryEvent;
         }
+
         return firstTelemetryEvent;
     }
 
@@ -53,7 +50,7 @@ public class TelemetryEvent
         short driverAhead;
         driverAhead = short.TryParse(line[9], out driverAhead) ? driverAhead : (short)0;
         return new TelemetryEvent(
-            new Vector3(int.Parse(line[7]), int.Parse(line[8]), 0),
+            new Vector3(float.Parse(line[7]), float.Parse(line[8]), 0),
             int.Parse(line[0]),
             driverAhead
         );
