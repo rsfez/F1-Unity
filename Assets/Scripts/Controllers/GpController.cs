@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Controllers.Builders;
 using Controllers.UI;
 using Models;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace Controllers
             var standings = GameObject.FindWithTag("Standings").GetComponent<StandingsController>();
             foreach (var textAsset in Resources.LoadAll<TextAsset>("Data/2023/Japan/R/drivers/"))
             {
-                var driverController = DriverController.Create(textAsset.name);
+                var driverController = DriverControllerBuilder.Instance.Build(textAsset.name);
                 var driver = driverController.GetDriver();
                 var driverGameObject = driverController.gameObject;
                 driver.GameObject = driverGameObject;

@@ -1,3 +1,4 @@
+using Controllers.Builders;
 using Controllers.Interactors;
 using Models;
 using Models.Builders;
@@ -7,7 +8,7 @@ using UnityEngine.Splines;
 
 namespace Controllers
 {
-    public class DriverController : MonoBehaviour
+    public class DriverController : MonoBehaviour, IBuildableController
     {
         private DriveInteractor _driveInteractor;
         private Driver _driver;
@@ -25,22 +26,20 @@ namespace Controllers
             _driveInteractor?.Drive();
         }
 
-        public Driver GetDriver()
+        public void Setup(params string[] args)
         {
-            return _driver;
-        }
-
-        public static DriverController Create(string abbreviation)
-        {
-            var driverGameObject = Instantiate(Resources.Load("Prefabs/Driver") as GameObject);
-            var driverController = driverGameObject.GetComponent<DriverController>();
+            var abbreviation = args[0];
             var driver = DriverBuilder.Instance.Build(abbreviation);
             var timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
             var spline = GameObject.FindWithTag("GP").AddComponent<SplineContainer>().Spline;
-            driverGameObject.name = abbreviation;
-            driverController._driver = driver;
-            driverController._driveInteractor = new DriveInteractor(driverGameObject.transform, driver, timer, spline);
-            return driverController;
+            gameObject.name = abbreviation;
+            _driver = driver;
+            _driveInteractor = new DriveInteractor(transform, driver, timer, spline);
+        }
+
+        public Driver GetDriver()
+        {
+            return _driver;
         }
     }
 }
