@@ -31,11 +31,10 @@ namespace Controllers.UI
             _standingsController.SetDriverSelected(this);
         }
 
-        public static GameObject CreateGameObject(Transform root, Driver driver)
+        public static void CreateGameObject(Transform root, Driver driver)
         {
             var driverStanding = Instantiate(Resources.Load("Prefabs/DriverStanding") as GameObject, root, true);
             driverStanding.GetComponent<DriverStandingController>().SetDriver(driver);
-            return driverStanding;
         }
 
         public void OnDriverSelected(bool selected)

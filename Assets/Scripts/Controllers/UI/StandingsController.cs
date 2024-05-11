@@ -12,14 +12,14 @@ namespace Controllers.UI
 
         private readonly SortedSet<Driver> _standings = new();
         private DriverStandingController _currentlySelectedDriverController;
-        private GPController _gpController;
+        private GpController _gpController;
         private long _lastStandingsUpdateTime;
         private Timer _timer;
 
         private void Awake()
         {
             _timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
-            _gpController = GameObject.FindGameObjectWithTag("GP").GetComponent<GPController>();
+            _gpController = GameObject.FindGameObjectWithTag("GP").GetComponent<GpController>();
         }
 
         private void FixedUpdate()
@@ -57,7 +57,8 @@ namespace Controllers.UI
             }
             else
             {
-                if (_currentlySelectedDriverController != null) _currentlySelectedDriverController?.OnDriverSelected(false);
+                if (_currentlySelectedDriverController != null)
+                    _currentlySelectedDriverController?.OnDriverSelected(false);
                 _currentlySelectedDriverController = driverStandingController;
                 _currentlySelectedDriverController.OnDriverSelected(true);
             }

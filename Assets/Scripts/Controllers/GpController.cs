@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Controllers
 {
-    public class GPController : MonoBehaviour
+    public class GpController : MonoBehaviour
     {
         private readonly HashSet<Team> _teams = new();
         public readonly Dictionary<short, Driver> Drivers = new();
@@ -33,7 +33,7 @@ namespace Controllers
             foreach (var textAsset in Resources.LoadAll<TextAsset>("Data/2023/Japan/R/drivers/"))
             {
                 var driverController = DriverController.Create(textAsset.name);
-                var driver = driverController.Driver;
+                var driver = driverController.GetDriver();
                 var driverGameObject = driverController.gameObject;
                 driver.GameObject = driverGameObject;
                 Drivers[short.Parse(driver.Number)] = driver;
