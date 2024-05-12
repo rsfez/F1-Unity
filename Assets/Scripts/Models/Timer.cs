@@ -4,13 +4,15 @@ namespace Models
 {
     public class Timer : MonoBehaviour
     {
-        private short _multiplicator = 1;
+        public int currentLap = 1;
+        private short _multiplier = 1;
         private float _timer;
         private bool _timerRunning;
+        private int _totalLaps;
 
         private void Update()
         {
-            if (_timerRunning) _timer += Time.deltaTime * 1000 * _multiplicator;
+            if (_timerRunning) _timer += Time.deltaTime * 1000 * _multiplier;
         }
 
         public void StartTimer()
@@ -42,9 +44,19 @@ namespace Models
             return $"{minutes:00}:{seconds:00}.{milliseconds:000}";
         }
 
-        public void SetMultiplier(short multiplicator)
+        public void SetMultiplier(short multiplier)
         {
-            _multiplicator = multiplicator;
+            _multiplier = multiplier;
+        }
+
+        public int GetTotalLaps()
+        {
+            return _totalLaps;
+        }
+
+        public void TryUpdateTotalLaps(int totalLaps)
+        {
+            if (totalLaps > _totalLaps) _totalLaps = totalLaps;
         }
     }
 }

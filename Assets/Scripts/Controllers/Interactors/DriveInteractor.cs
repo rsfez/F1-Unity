@@ -21,7 +21,7 @@ namespace Controllers.Interactors
             _driver = driver;
             _timer = timer;
             _spline = spline;
-            InitSpline(_driver.LastVisitedTelemetryEvent);
+            InitSpline(_driver.GetLastVisitedTelemetryEvent());
             _transform.position = _segmentStart.Position;
         }
 
@@ -32,8 +32,8 @@ namespace Controllers.Interactors
             var currentTime = _timer.GetTime();
 
             // "Fast-forward" to lastly covered telemetry event 
-            while (currentTime > _driver.LastVisitedTelemetryEvent.Time)
-                _driver.LastVisitedTelemetryEvent = _driver.LastVisitedTelemetryEvent.Next;
+            while (currentTime > _driver.GetLastVisitedTelemetryEvent().Time)
+                _driver.SetLastVisitedTelemetryEvent(_driver.GetLastVisitedTelemetryEvent().Next);
 
             // Reset spline when it gets close to the end to continue with smooth interpolation
             if (normalizedTime > 0.90)
@@ -59,7 +59,7 @@ namespace Controllers.Interactors
 
             // Using the current position to start the new segment as not to teleport to the next one
             TelemetryEvent current =
-                new(_transform.position, currentTime, _driver.LastVisitedTelemetryEvent.DriverAhead)
+                new(_transform.position, currentTime, _driver.GetLastVisitedTelemetryEvent().DriverAhead)
                 {
                     Next = _segmentStart
                 };

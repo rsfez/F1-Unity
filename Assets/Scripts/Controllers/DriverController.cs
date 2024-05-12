@@ -13,7 +13,6 @@ namespace Controllers
         private DriveInteractor _driveInteractor;
         private Driver _driver;
         private Spline _spline;
-        private Timer _timer;
 
         private void Start()
         {

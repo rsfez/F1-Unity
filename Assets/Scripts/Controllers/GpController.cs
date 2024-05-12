@@ -12,10 +12,12 @@ namespace Controllers
         private readonly HashSet<Team> _teams = new();
         public readonly Dictionary<short, Driver> Drivers = new();
         private GameObject _camera;
+        private Timer _timer;
 
         private void Awake()
         {
             _camera = GetComponentInChildren<Camera>().gameObject;
+            _timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
         }
 
         private void Start()
@@ -35,6 +37,7 @@ namespace Controllers
             {
                 var driverController = DriverControllerBuilder.Instance.Build(textAsset.name);
                 var driver = driverController.GetDriver();
+                _timer.TryUpdateTotalLaps(driver.Laps.Count);
                 var driverGameObject = driverController.gameObject;
                 driver.GameObject = driverGameObject;
                 Drivers[short.Parse(driver.Number)] = driver;

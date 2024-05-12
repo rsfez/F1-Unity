@@ -33,7 +33,7 @@ namespace Models.Builders
             driverAhead = short.TryParse(line[9], out driverAhead) ? driverAhead : (short)0;
             return new TelemetryEvent(
                 new Vector3(float.Parse(line[7]), float.Parse(line[8]), 0),
-                int.Parse(line[0]),
+                long.Parse(line[0]),
                 driverAhead
             );
         }

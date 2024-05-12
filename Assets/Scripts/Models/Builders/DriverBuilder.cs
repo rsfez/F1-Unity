@@ -20,11 +20,13 @@ namespace Models.Builders
             var teamId = csv[6][0];
             var teamColor = ColorUtils.HexToColor(csv[5][0]);
             var team = new Team(teamName, teamId, teamColor);
+            var laps = LapsBuilder.Instance.Build(abbreviation);
 
             Driver driver = new(
                 number,
                 abbreviation,
-                position
+                position,
+                laps
             )
             {
                 Team = team

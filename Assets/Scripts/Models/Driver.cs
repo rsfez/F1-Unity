@@ -7,19 +7,22 @@ namespace Models
 {
     public class Driver : IComparable<Driver>
     {
+        public readonly List<Lap> Laps;
         public readonly string Number, Abbreviation;
+        private TelemetryEvent _lastVisitedTelemetryEvent;
+        public short currentLap = 1;
         public GameObject GameObject;
-        public TelemetryEvent LastVisitedTelemetryEvent;
         public short Position;
         public Team Team;
 
-        public Driver(string number, string abbreviation, short position)
+        public Driver(string number, string abbreviation, short position, List<Lap> laps)
         {
             Number = number;
             Abbreviation = abbreviation;
             Position = position;
+            Laps = laps;
 
-            LastVisitedTelemetryEvent = TelemetryEventBuilder.Instance.Build(abbreviation);
+            _lastVisitedTelemetryEvent = TelemetryEventBuilder.Instance.Build(abbreviation);
         }
 
         public int CompareTo(Driver other)
@@ -42,12 +45,24 @@ namespace Models
 
         public override string ToString()
         {
-            return Abbreviation + " in position: " + Position + ". Behind: " + LastVisitedTelemetryEvent.DriverAhead;
+            return Abbreviation + " in position: " + Position + ". Behind: " + _lastVisitedTelemetryEvent.DriverAhead;
         }
 
         public Driver GetDriverAhead(Dictionary<short, Driver> drivers)
         {
-            return LastVisitedTelemetryEvent.DriverAhead == 0 ? null : drivers[LastVisitedTelemetryEvent.DriverAhead];
+            return _lastVisitedTelemetryEvent.DriverAhead == 0 ? null : drivers[_lastVisitedTelemetryEvent.DriverAhead];
+        }
+
+        public TelemetryEvent GetLastVisitedTelemetryEvent()
+        {
+            return _lastVisitedTelemetryEvent;
+        }
+
+        public void SetLastVisitedTelemetryEvent(TelemetryEvent lastVisitedTelemetryEvent)
+        {
+            _lastVisitedTelemetryEvent = lastVisitedTelemetryEvent;
+
+            // Check laps
         }
     }
 }
