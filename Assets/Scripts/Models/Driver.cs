@@ -10,7 +10,7 @@ namespace Models
         public readonly List<Lap> Laps;
         public readonly string Number, Abbreviation;
         private TelemetryEvent _lastVisitedTelemetryEvent;
-        public short currentLap = 1;
+        public int CurrentLap;
         public GameObject GameObject;
         public short Position;
         public Team Team;
@@ -62,7 +62,9 @@ namespace Models
         {
             _lastVisitedTelemetryEvent = lastVisitedTelemetryEvent;
 
-            // Check laps
+            // Increment currentLap
+            if (CurrentLap < Laps.Count && _lastVisitedTelemetryEvent.Time > Laps[CurrentLap].StartTime)
+                CurrentLap++;
         }
     }
 }

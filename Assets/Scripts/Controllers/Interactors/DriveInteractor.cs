@@ -30,6 +30,7 @@ namespace Controllers.Interactors
             if (_driver == null || !_timer || _spline == null || !_timer.IsRunning()) return;
             var normalizedTime = GetNormalizedTime();
             var currentTime = _timer.GetTime();
+            var currentLapBeforeUpdate = _driver.CurrentLap;
 
             // "Fast-forward" to lastly covered telemetry event 
             while (currentTime > _driver.GetLastVisitedTelemetryEvent().Time)
@@ -45,6 +46,10 @@ namespace Controllers.Interactors
                 var position = _spline.EvaluatePosition(normalizedTime);
                 _transform.position = position;
             }
+
+            // Notify timer of new lap possibility
+            var lapAfterUpdate = _driver.CurrentLap;
+            if (currentLapBeforeUpdate < lapAfterUpdate) _timer.TryUpdateCurrentLap(_driver.CurrentLap);
         }
 
         private void UpdateSplineSegment(long currentTime)
