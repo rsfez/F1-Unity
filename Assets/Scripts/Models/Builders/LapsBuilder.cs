@@ -23,7 +23,8 @@ namespace Models.Builders
 
             var laps = lapsStrings.Select(lapString => new Lap(long.Parse(lapString[0]), long.Parse(lapString[3])))
                 .ToList();
-            return laps;
+            var firstLapStartTime = laps[0].StartTime;
+            return laps.Select(lap => lap.CopyWithAdjustedStartTime(firstLapStartTime)).ToList();
         }
 
         private void LoadCsv()

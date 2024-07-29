@@ -18,7 +18,7 @@ namespace Controllers.UI
 
         private void Update()
         {
-            _lapText.text = "Lap: " + _timer.currentLap + "/" + _timer.GetTotalLaps();
+            _lapText.text = "Lap: " + _timer.GetCurrentLap() + "/" + _timer.GetTotalLaps();
         }
     }
 }

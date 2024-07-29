@@ -10,5 +10,10 @@ namespace Models
             StartTime = startTime;
             Time = time;
         }
+
+        internal Lap CopyWithAdjustedStartTime(long adjustedStartTime)
+        {
+            return new Lap(StartTime - adjustedStartTime, Time);
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace Models
 {
     public class Timer : MonoBehaviour
     {
-        public int currentLap = 1;
+        private int _currentLap = 1;
         private short _multiplier = 1;
         private float _timer;
         private bool _timerRunning;
@@ -57,6 +57,16 @@ namespace Models
         public void TryUpdateTotalLaps(int totalLaps)
         {
             if (totalLaps > _totalLaps) _totalLaps = totalLaps;
+        }
+
+        public int GetCurrentLap()
+        {
+            return _currentLap;
+        }
+
+        public void TryUpdateCurrentLap(int currentLap)
+        {
+            if (currentLap > _currentLap) _currentLap = currentLap;
         }
     }
 }

@@ -13,6 +13,13 @@ namespace Controllers
         private DriveInteractor _driveInteractor;
         private Driver _driver;
         private Spline _spline;
+        private Timer _timer;
+
+        private void Awake()
+        {
+            _spline = GameObject.FindWithTag("GP").AddComponent<SplineContainer>().Spline;
+            _timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
+        }
 
         private void Start()
         {
@@ -29,11 +36,9 @@ namespace Controllers
         {
             var abbreviation = args[0];
             var driver = DriverBuilder.Instance.Build(abbreviation);
-            var timer = GameObject.FindGameObjectWithTag("Timer").GetComponent<Timer>();
-            var spline = GameObject.FindWithTag("GP").AddComponent<SplineContainer>().Spline;
             gameObject.name = abbreviation;
             _driver = driver;
-            _driveInteractor = new DriveInteractor(transform, driver, timer, spline);
+            _driveInteractor = new DriveInteractor(transform, driver, _timer, _spline);
         }
 
         public Driver GetDriver()
