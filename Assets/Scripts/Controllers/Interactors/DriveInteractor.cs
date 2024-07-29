@@ -1,4 +1,3 @@
-using System.Linq;
 using Models;
 using Unity.Mathematics;
 using UnityEngine;
@@ -37,7 +36,7 @@ namespace Controllers.Interactors
                 _driver.SetLastVisitedTelemetryEvent(_driver.GetLastVisitedTelemetryEvent().Next);
 
             // Reset spline when it gets close to the end to continue with smooth interpolation
-            if (normalizedTime > 0.90)
+            if (normalizedTime > 0.9)
             {
                 UpdateSplineSegment(currentTime);
             }
@@ -54,23 +53,13 @@ namespace Controllers.Interactors
 
         private void UpdateSplineSegment(long currentTime)
         {
-            while (currentTime > _segmentStart.Time)
+            _spline.Clear();
+            var newSegmentStart = new TelemetryEvent(_transform.position, currentTime,
+                _driver.GetLastVisitedTelemetryEvent().DriverAhead)
             {
-                _segmentStart = _segmentStart.Next;
-                _segmentEnd = _segmentEnd.Next;
-                _spline.RemoveAt(0);
-                _spline.Add(new BezierKnot(_segmentEnd.Position));
-            }
-
-            // Using the current position to start the new segment as not to teleport to the next one
-            TelemetryEvent current =
-                new(_transform.position, currentTime, _driver.GetLastVisitedTelemetryEvent().DriverAhead)
-                {
-                    Next = _segmentStart
-                };
-            _segmentStart = current;
-            _spline.Insert(0, new BezierKnot(current.Position));
-            _spline.RemoveAt(_spline.Knots.Count() - 1);
+                Next = _driver.GetLastVisitedTelemetryEvent().Next
+            };
+            InitSpline(newSegmentStart);
         }
 
         private void InitSpline(TelemetryEvent segmentStart)
