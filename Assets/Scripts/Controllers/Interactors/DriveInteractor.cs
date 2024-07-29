@@ -8,6 +8,7 @@ namespace Controllers.Interactors
     public class DriveInteractor
     {
         private const int SegmentSize = 50;
+        private const float NormalizedTimeThresholdToRebuild = 0.95f;
         private readonly Driver _driver;
         private readonly Spline _spline;
         private readonly Timer _timer;
@@ -36,7 +37,8 @@ namespace Controllers.Interactors
                 _driver.SetLastVisitedTelemetryEvent(_driver.GetLastVisitedTelemetryEvent().Next);
 
             // Reset spline when it gets close to the end to continue with smooth interpolation
-            if (normalizedTime > 0.9)
+            var needsSplineReset = normalizedTime > NormalizedTimeThresholdToRebuild;
+            if (needsSplineReset)
             {
                 UpdateSplineSegment(currentTime);
             }
